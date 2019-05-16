@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.order.machine.mapper.OrderConfigMapper">
+
+    <update id="updateActivateCount" parameterType="string">
+      UPDATE tb_order_config
+      SET activate_count=activate_count+1
+      WHERE order_id=#{orderId}
+    </update>
+
+    <select id="testSelect" resultType="string">
+        SELECT id FROM tb_order_config
+    </select>
+</mapper>
