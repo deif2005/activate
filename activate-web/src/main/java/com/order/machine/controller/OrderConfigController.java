@@ -24,12 +24,21 @@ public class OrderConfigController {
     @Autowired
     IOrderConfigService orderConfigService;
 
+    /**
+     * 导入订单授权报盘表格
+     * @return
+     */
     @PostMapping("/v1/addOrderConfig")
     public String addOrderConfig(){
         orderConfigService.importOrderConfigInfo("");
         return "";
     }
 
+    /**
+     * 获取订单报盘信息
+     * @param id
+     * @return
+     */
     @GetMapping("/v1/getOrderConfig")
     public String getOrderConfigInfo(@RequestParam("id") String id){
         OrderConfigPo orderConfigPo = orderConfigService.getOrderConfig(id);
@@ -37,6 +46,15 @@ public class OrderConfigController {
         return result;
     }
 
+    /**
+     * 获取订单报盘信息列表
+     * @param beginDate
+     * @param endDate
+     * @param pageNo
+     * @param pageSize
+     * @param isClose
+     * @return
+     */
     @GetMapping("v1/listOrderConfig")
     public String listOrderConfigInfo(@RequestParam("beginDate") String beginDate,
                                       @RequestParam("endDate") String endDate,
@@ -54,6 +72,12 @@ public class OrderConfigController {
         return result;
     }
 
+    /**
+     * 更新订单配置
+     * @param id
+     * @param isClose
+     * @return
+     */
     @PostMapping("v1/updateOrderConfig")
     public String updateOrderConfig(@RequestParam("id") String id,
                                     @RequestParam("isClose") Integer isClose){
@@ -64,6 +88,11 @@ public class OrderConfigController {
         return "";
     }
 
+    /**
+     * 激活机器
+     * @param activateParam
+     * @return
+     */
     @PostMapping("v1/activateMachine")
     public String activateMachine(@RequestParam("activateParam") String activateParam){
         ActivatePo activatePo = JSON.parseObject(activateParam,ActivatePo.class);
@@ -77,6 +106,15 @@ public class OrderConfigController {
         return result;
     }
 
+    /**
+     * 获取机器激活信息列表
+     * @param orderId
+     * @param beginDate
+     * @param endDate
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
     @GetMapping("v1/listActivateMachine")
     public String listActivateMachine(@RequestParam("orderId") String orderId,
                                       @RequestParam(value = "beginDate", required = false) String beginDate,

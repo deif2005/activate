@@ -37,6 +37,12 @@ public class LoginController {
     @Autowired
     RedisUtil redisUtil;
 
+    /**
+     * 登录
+     * @param userId
+     * @param password
+     * @return
+     */
     @PostMapping(value = "login")
     public String login(@RequestParam("userId") String userId,
                         @RequestParam("password") String password){
@@ -63,6 +69,13 @@ public class LoginController {
         return result;
     }
 
+    /**
+     * 注册
+     * @param userId
+     * @param userName
+     * @param password
+     * @return
+     */
     @PostMapping(value = "register")
     public String registerUser(@RequestParam("userId") String userId,
                                @RequestParam("userName") String userName,
@@ -71,6 +84,11 @@ public class LoginController {
         return "";
     }
 
+    /**
+     * 注销
+     * @param request
+     * @return
+     */
     @PostMapping(value = "logout")
     public String logout(HttpServletRequest request){
         String token = request.getParameter("token");
