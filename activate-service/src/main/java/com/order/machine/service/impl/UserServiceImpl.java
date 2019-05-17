@@ -23,6 +23,11 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     UserMapper userMapper;
 
+    /**
+     * 验证用户信息
+     * @param userPo
+     * @return
+     */
     @Override
     public boolean verifyUser(UserPo userPo){
         Example example = new Example(UserPo.class);
@@ -41,6 +46,12 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    /**
+     * 用户注册
+     * @param userId
+     * @param userName
+     * @param password
+     */
     @Override
     public void registerUser(String userId,String userName,String password){
         Example example = new Example(UserPo.class);

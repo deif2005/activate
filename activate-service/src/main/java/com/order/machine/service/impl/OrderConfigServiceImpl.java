@@ -53,6 +53,11 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         orderConfigMapper.insertSelective(orderConfigPo);
     }
 
+    /**
+     * 获取订单配置信息
+     * @param id
+     * @return
+     */
     public OrderConfigPo getOrderConfig(String id){
         OrderConfigPo orderConfigPo = new OrderConfigPo();
         orderConfigPo.setId(id);
@@ -60,6 +65,11 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         return result;
     }
 
+    /**
+     * 订单配置信息列表
+     * @param orderConfigQuery
+     * @return
+     */
     public PageInfo<OrderConfigPo> listOrderConfig(OrderConfigQuery orderConfigQuery){
         Example example = new Example(OrderConfigPo.class);
         Example.Criteria criteria = example.createCriteria();
@@ -71,10 +81,19 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         return orderConfigPoPageInfo;
     }
 
+    /**
+     * 修改订单配置信息
+     * @param orderConfigPo
+     */
     public void modifyOrderConfig(OrderConfigPo orderConfigPo){
         orderConfigMapper.updateByPrimaryKeySelective(orderConfigPo);
     }
 
+    /**
+     * 授权
+     * @param activatePo
+     * @return
+     */
     @Transactional
     public String checkActivate(ActivatePo activatePo){
         String licenceKey = verifyOrderId(activatePo.getOrderId());
@@ -85,6 +104,13 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         return "";
     }
 
+    /**
+     * 验证机器码信息
+     * @param orderId
+     * @param chipSn
+     * @param licenceKey
+     * @return
+     */
     private String verifyChipSn(String orderId, String chipSn, String licenceKey){
         String aesKey="";
         ActivatePo activatePo = new ActivatePo();
@@ -110,6 +136,11 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         return aesKey;
     }
 
+    /**
+     * 验证订单信息
+     * @param orderId
+     * @return
+     */
     private String verifyOrderId(String orderId){
         String result = "";
         OrderConfigPo orderConfigPo = new OrderConfigPo();
@@ -128,6 +159,11 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         return result;
     }
 
+    /**
+     * 查看机器激活信息
+     * @param activateMachineQuery
+     * @return
+     */
     public PageInfo<ActivatePo> listActivateMachine(ActivateMachineQuery activateMachineQuery){
         Example example = new Example(ActivatePo.class);
         Example.Criteria criteria = example.createCriteria();
