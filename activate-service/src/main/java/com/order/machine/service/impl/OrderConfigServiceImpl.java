@@ -44,6 +44,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
     public void importOrderConfigInfo(String filePath){
         OrderConfigPo orderConfigPo = new OrderConfigPo();
         orderConfigPo.setId(UUID.randomUUID().toString());
+        orderConfigPo.setCompanyId("1");
         orderConfigPo.setOrderId("tempOrderId001");
         orderConfigPo.setLicenceCount("10");
         orderConfigPo.setSalt(VertifyCodeUtil.getRandromNum());
@@ -73,6 +74,8 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
     public PageInfo<OrderConfigPo> listOrderConfig(OrderConfigQuery orderConfigQuery){
         Example example = new Example(OrderConfigPo.class);
         Example.Criteria criteria = example.createCriteria();
+        //如果是管理员
+        criteria.andEqualTo("companyId",orderConfigQuery.getCompanyId());
         criteria.andBetween("createTime",orderConfigQuery.getBeginDate(),orderConfigQuery.getEndDate());
         criteria.andEqualTo("isClose",orderConfigQuery.getIsClose());
         PageInfo<OrderConfigPo> orderConfigPoPageInfo = PageHelper.startPage(orderConfigQuery.getPageNo(),
@@ -98,7 +101,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
     public String checkActivate(ActivatePo activatePo){
         String licenceKey = verifyOrderId(activatePo.getOrderId());
         if (!Strings.isNullOrEmpty(licenceKey)){
-            String activateKey = verifyChipSn(activatePo.getOrderId(),activatePo.getChipSn(),licenceKey);
+            String activateKey = verifyChipSn(activatePo.getOrderId(), activatePo.getChipSn(), licenceKey);
             return activateKey;
         }
         return "";
@@ -112,7 +115,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @return
      */
     private String verifyChipSn(String orderId, String chipSn, String licenceKey){
-        String aesKey="";
+        String aesKey;
         ActivatePo activatePo = new ActivatePo();
         activatePo.setChipSn(chipSn);
         activatePo.setOrderId(orderId);

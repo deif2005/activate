@@ -29,10 +29,10 @@ public class UserServiceImpl implements IUserService {
      * @return
      */
     @Override
-    public boolean verifyUser(UserPo userPo){
+    public UserPo verifyUser(UserPo userPo){
         Example example = new Example(UserPo.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userId",userPo.getUserId());
+        criteria.andEqualTo("userName",userPo.getUserName());
         UserPo user = userMapper.selectOneByExample(example);
         if (null == user){
             throw LogicException.le(CommonEnum.ReturnCode.UserLoginCode.user_login_UserNotExists.getValue(),
@@ -43,7 +43,7 @@ public class UserServiceImpl implements IUserService {
             throw LogicException.le(CommonEnum.ReturnCode.UserLoginCode.user_password_error.getValue(),
                     "密码错误");
         }
-        return true;
+        return user;
     }
 
     /**
@@ -53,13 +53,13 @@ public class UserServiceImpl implements IUserService {
      * @param password
      */
     @Override
-    public void registerUser(String userId,String userName,String password){
+    public void registerUser(String userId,String companyId,String userName,String password){
         Example example = new Example(UserPo.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userId",userId);
+        criteria.andEqualTo("userName",userId);
         if (userMapper.selectCountByExample(example) > 0){
             throw LogicException.le(CommonEnum.ReturnCode.UserLoginCode.user_already_exists.getValue(),
-                    "用户id已存在");
+                    "用户名已存在");
         }
         String salt = VertifyCodeUtil.getRandromNum();
         String md5Pwd = MD5Utils.getMD5(password + salt);
@@ -67,6 +67,7 @@ public class UserServiceImpl implements IUserService {
         UserPo user = new UserPo();
         user.setId(id);
         user.setUserId(userId);
+        user.setCompanyId(companyId);
         user.setUserName(userName);
         user.setPassword(md5Pwd);
         user.setSalt(salt);

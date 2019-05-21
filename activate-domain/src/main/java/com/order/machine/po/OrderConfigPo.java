@@ -12,6 +12,7 @@ public class OrderConfigPo {
 
     @Id
     private String id;
+    private String companyId;
     private String orderId;
     private String licenceCount;
     private String licenceKey;
@@ -27,6 +28,14 @@ public class OrderConfigPo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
     public String getOrderId() {

@@ -47,9 +47,10 @@ public class OrderConfigController {
     }
 
     /**
-     * 获取订单报盘信息列表
+     * 获取订单信息列表
      * @param beginDate
      * @param endDate
+     * @param companyId 用户所属客户id
      * @param pageNo
      * @param pageSize
      * @param isClose
@@ -58,12 +59,14 @@ public class OrderConfigController {
     @GetMapping("v1/listOrderConfig")
     public String listOrderConfigInfo(@RequestParam("beginDate") String beginDate,
                                       @RequestParam("endDate") String endDate,
+                                      @RequestParam("companyId") String companyId,
                                       @RequestParam("pageNo") Integer pageNo,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam(value = "isClose", required = false) String isClose){
         OrderConfigQuery orderConfigQuery = new OrderConfigQuery();
         orderConfigQuery.setBeginDate(beginDate);
         orderConfigQuery.setEndDate(endDate);
+        orderConfigQuery.setCompanyId(companyId);
         orderConfigQuery.setPageNo(pageNo);
         orderConfigQuery.setPageSize(pageSize);
         orderConfigQuery.setIsClose(isClose);

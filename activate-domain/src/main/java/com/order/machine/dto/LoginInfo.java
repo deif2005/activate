@@ -6,6 +6,7 @@ package com.order.machine.dto;
  */
 public class LoginInfo {
     private String userId;
+    private String companyId;
     private String token;
     private String loginTime;
 
@@ -15,6 +16,14 @@ public class LoginInfo {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
     public String getToken() {

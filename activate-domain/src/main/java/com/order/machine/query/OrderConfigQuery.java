@@ -9,9 +9,18 @@ import com.order.machine.base.Page;
  */
 public class OrderConfigQuery extends Page {
 
+    private String companyId;
     private String beginDate;
     private String endDate;
     private String isClose;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public String getBeginDate() {
         return beginDate;

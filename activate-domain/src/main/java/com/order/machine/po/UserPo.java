@@ -12,6 +12,7 @@ public class UserPo {
 
     @Id
     private String id;
+    private String companyId;
     private String userId;
     private String userName;
     private String password;
@@ -23,6 +24,14 @@ public class UserPo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
     public String getUserId() {
