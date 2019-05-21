@@ -16,13 +16,8 @@ public interface IOrderConfigService {
 
     OrderConfigPo getOrderConfig(String id);
 
-    PageInfo<OrderConfigPo> listOrderConfig(OrderConfigQuery orderConfigQuery);
-
     void modifyOrderConfig(OrderConfigPo orderConfigPo);
 
     String checkActivate(ActivatePo activatePo);
 
-    PageInfo<ActivatePo> listActivateMachine(ActivateMachineQuery activateMachineQuery);
-
-    String testSelect();
 }

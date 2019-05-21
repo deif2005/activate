@@ -12,7 +12,7 @@ public class ActivatePo {
 
     @Id
     private String id;
-    private Integer companyId;
+    private String companyId;
     private String orderId;
     private String chipSn;
     private String updateTime;
@@ -26,11 +26,11 @@ public class ActivatePo {
         this.id = id;
     }
 
-    public Integer getCompanyId() {
+    public String getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Integer companyId) {
+    public void setCompanyId(String companyId) {
         this.companyId = companyId;
     }
 

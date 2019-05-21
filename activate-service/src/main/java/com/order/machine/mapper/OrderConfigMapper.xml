@@ -8,7 +8,22 @@
       WHERE order_id=#{orderId}
     </update>
 
-    <select id="testSelect" resultType="string">
-        SELECT id FROM tb_order_config
+    <select id="listOrderCount" resultType="com.order.machine.dto.OrderStatistics">
+        SELECT
+        a.company_id,
+        b.company_name,
+        COUNT(a.order_id) ordercount,
+        SUM(a.licence_count) licencecount,
+        SUM(a.activate_count) activatecount
+        FROM tb_order_config a
+        INNER JOIN tb_company b ON a.company_id=b.company_id
+        <where>
+            <if test="companyId != '' and companyId != null">
+              a.company_id=#{companyId}
+            </if>
+            <if test="orderDateBegin != '' and orderDateBegin != null">
+                AND (order_date <![CDATA[>=]]> #{orderDateBegin} AND order_date <![CDATA[<=]]> #{orderDateEnd})
+            </if>
+        </where>
     </select>
 </mapper>

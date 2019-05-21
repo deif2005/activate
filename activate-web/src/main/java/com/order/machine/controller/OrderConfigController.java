@@ -4,12 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.order.machine.common_const.CommonEnum;
+import com.order.machine.dto.OrderStatistics;
 import com.order.machine.exception.LogicException;
 import com.order.machine.po.ActivatePo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
 import com.order.machine.query.OrderConfigQuery;
+import com.order.machine.query.OrderStatisticsQuery;
 import com.order.machine.service.IOrderConfigService;
+import com.order.machine.service.IOrderDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +26,8 @@ public class OrderConfigController {
 
     @Autowired
     IOrderConfigService orderConfigService;
+    @Autowired
+    IOrderDataService orderDataService;
 
     /**
      * 导入订单授权报盘表格
@@ -70,7 +75,7 @@ public class OrderConfigController {
         orderConfigQuery.setPageNo(pageNo);
         orderConfigQuery.setPageSize(pageSize);
         orderConfigQuery.setIsClose(isClose);
-        PageInfo<OrderConfigPo> orderConfigPoPageInfo = orderConfigService.listOrderConfig(orderConfigQuery);
+        PageInfo<OrderConfigPo> orderConfigPoPageInfo = orderDataService.listOrderConfig(orderConfigQuery);
         String result = JSON.toJSONString(orderConfigPoPageInfo);
         return result;
     }
@@ -130,8 +135,34 @@ public class OrderConfigController {
         activateMachineQuery.setEndDate(endDate);
         activateMachineQuery.setPageNo(pageNo);
         activateMachineQuery.setPageSize(pageSize);
-        PageInfo<ActivatePo> activatePoPageInfo = orderConfigService.listActivateMachine(activateMachineQuery);
+        PageInfo<ActivatePo> activatePoPageInfo = orderDataService.listActivateMachine(activateMachineQuery);
         String result = JSON.toJSONString(activatePoPageInfo);
+        return result;
+    }
+
+    /**
+     * 获取订单激活统计表
+     * @param companyId
+     * @param beginDate
+     * @param endDate
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("v1/listOrderCount")
+    public String listOrderCount(@RequestParam(value = "companyId", required = false) String companyId,
+                                 @RequestParam(value = "beginDate") String beginDate,
+                                 @RequestParam(value = "endDate") String endDate,
+                                 @RequestParam("pageNo") Integer pageNo,
+                                 @RequestParam("pageSize") Integer pageSize){
+        OrderStatisticsQuery orderStatisticsQuery = new OrderStatisticsQuery();
+        orderStatisticsQuery.setCompanyId(companyId);
+        orderStatisticsQuery.setOrderDateBegin(beginDate);
+        orderStatisticsQuery.setOrderDateEnd(endDate);
+        orderStatisticsQuery.setPageNo(pageNo);
+        orderStatisticsQuery.setPageSize(pageSize);
+        PageInfo<OrderStatistics> orderStatisticsPageInfo = orderDataService.listOrderCount(orderStatisticsQuery);
+        String result = JSON.toJSONString(orderStatisticsPageInfo);
         return result;
     }
 }

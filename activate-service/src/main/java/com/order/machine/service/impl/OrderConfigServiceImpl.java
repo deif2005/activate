@@ -41,6 +41,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * 导入订单配置信息
      * @param filePath
      */
+    @Override
     public void importOrderConfigInfo(String filePath){
         OrderConfigPo orderConfigPo = new OrderConfigPo();
         orderConfigPo.setId(UUID.randomUUID().toString());
@@ -59,6 +60,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @param id
      * @return
      */
+    @Override
     public OrderConfigPo getOrderConfig(String id){
         OrderConfigPo orderConfigPo = new OrderConfigPo();
         orderConfigPo.setId(id);
@@ -67,27 +69,10 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
     }
 
     /**
-     * 订单配置信息列表
-     * @param orderConfigQuery
-     * @return
-     */
-    public PageInfo<OrderConfigPo> listOrderConfig(OrderConfigQuery orderConfigQuery){
-        Example example = new Example(OrderConfigPo.class);
-        Example.Criteria criteria = example.createCriteria();
-        //如果是管理员
-        criteria.andEqualTo("companyId",orderConfigQuery.getCompanyId());
-        criteria.andBetween("createTime",orderConfigQuery.getBeginDate(),orderConfigQuery.getEndDate());
-        criteria.andEqualTo("isClose",orderConfigQuery.getIsClose());
-        PageInfo<OrderConfigPo> orderConfigPoPageInfo = PageHelper.startPage(orderConfigQuery.getPageNo(),
-                orderConfigQuery.getPageSize())
-                .doSelectPageInfo(()-> orderConfigMapper.selectByExample(example));
-        return orderConfigPoPageInfo;
-    }
-
-    /**
      * 修改订单配置信息
      * @param orderConfigPo
      */
+    @Override
     public void modifyOrderConfig(OrderConfigPo orderConfigPo){
         orderConfigMapper.updateByPrimaryKeySelective(orderConfigPo);
     }
@@ -98,6 +83,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @return
      */
     @Transactional
+    @Override
     public String checkActivate(ActivatePo activatePo){
         String licenceKey = verifyOrderId(activatePo.getOrderId());
         if (!Strings.isNullOrEmpty(licenceKey)){
@@ -160,28 +146,5 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         if (null != rt)
             result = rt.getLicenceKey();
         return result;
-    }
-
-    /**
-     * 查看机器激活信息
-     * @param activateMachineQuery
-     * @return
-     */
-    public PageInfo<ActivatePo> listActivateMachine(ActivateMachineQuery activateMachineQuery){
-        Example example = new Example(ActivatePo.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("orderId",activateMachineQuery.getOrderId());
-        if (Strings.isNullOrEmpty(activateMachineQuery.getBeginDate()) &&
-                Strings.isNullOrEmpty(activateMachineQuery.getEndDate())){
-            criteria.andBetween("createTime",activateMachineQuery.getBeginDate(),
-                    activateMachineQuery.getEndDate());
-        }
-        PageInfo<ActivatePo> activatePoPageInfo = PageHelper.startPage(activateMachineQuery.getPageNo(),
-                activateMachineQuery.getPageSize()).doSelectPageInfo(()->activateMapper.selectByExample(example));
-        return activatePoPageInfo;
-    }
-
-    public String testSelect(){
-        return orderConfigMapper.testSelect();
     }
 }
