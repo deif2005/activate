@@ -3,7 +3,6 @@ package com.order.machine.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
-import com.order.machine.base.Page;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.mapper.ActivateMapper;
 import com.order.machine.mapper.OrderConfigMapper;
