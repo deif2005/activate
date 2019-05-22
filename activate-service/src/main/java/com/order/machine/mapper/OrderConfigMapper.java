@@ -18,4 +18,6 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
     List<OrderStatistics> listOrderCount(@Param("companyId") String companyId,
                                          @Param("orderDateBegin") String orderDateBegin,
                                          @Param("orderDateEnd") String orderDateEnd);
+
+    void addOrderConfigByList(List<OrderConfigPo> orderConfigPos);
 }

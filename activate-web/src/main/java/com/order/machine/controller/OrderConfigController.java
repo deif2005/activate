@@ -35,7 +35,8 @@ public class OrderConfigController {
      */
     @PostMapping("/v1/addOrderConfig")
     public String addOrderConfig(){
-        orderConfigService.importOrderConfigInfo("");
+        //上传文档
+        orderConfigService.importOrderConfigInfo("D:\\zzy\\machine-activate\\file\\order.xlsx");
         return "";
     }
 
@@ -165,4 +166,6 @@ public class OrderConfigController {
         String result = JSON.toJSONString(orderStatisticsPageInfo);
         return result;
     }
+
+
 }

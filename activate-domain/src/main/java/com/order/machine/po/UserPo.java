@@ -1,5 +1,7 @@
 package com.order.machine.po;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -11,20 +13,12 @@ import javax.persistence.Table;
 public class UserPo {
 
     @Id
-    private String id;
-    private String companyId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String userId;
+    private String companyId;
     private String userName;
     private String password;
     private String salt;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getCompanyId() {
         return companyId;

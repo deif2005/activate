@@ -48,31 +48,26 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * 用户注册
-     * @param userId
+     * @param companyId
      * @param userName
      * @param password
      */
     @Override
-    public void registerUser(String userId,String companyId,String userName,String password){
+    public void registerUser(String companyId,String userName,String password){
         Example example = new Example(UserPo.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userName",userId);
+        criteria.andEqualTo("userName",userName);
         if (userMapper.selectCountByExample(example) > 0){
             throw LogicException.le(CommonEnum.ReturnCode.UserLoginCode.user_already_exists.getValue(),
                     "用户名已存在");
         }
         String salt = VertifyCodeUtil.getRandromNum();
         String md5Pwd = MD5Utils.getMD5(password + salt);
-        String id = UUID.randomUUID().toString();
         UserPo user = new UserPo();
-        user.setId(id);
-        user.setUserId(userId);
         user.setCompanyId(companyId);
         user.setUserName(userName);
         user.setPassword(md5Pwd);
         user.setSalt(salt);
         userMapper.insert(user);
     }
-
-
 }

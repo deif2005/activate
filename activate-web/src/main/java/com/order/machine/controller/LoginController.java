@@ -39,50 +39,48 @@ public class LoginController {
 
     /**
      * 登录
-     * @param userId
+     * @param userName
      * @param password
      * @return
      */
     @PostMapping(value = "login")
-    public String login(@RequestParam("userId") String userId,
+    public String login(@RequestParam("userName") String userName,
                         @RequestParam("password") String password){
-        String result;
+        LoginInfo result;
         UserPo userPo = new UserPo();
-        userPo.setUserId(userId);
+        userPo.setUserName(userName);
         userPo.setPassword(password);
         UserPo rtUser = userService.verifyUser(userPo);
-        if (!redisUtil.hasKey(String.format(RedisConstants.LOGIN_TOKEN,userId))){
+        if (!redisUtil.hasKey(String.format(RedisConstants.LOGIN_TOKEN,userName))){
             LoginInfo loginInfo = new LoginInfo();
-            loginInfo.setUserId(userId);
+            loginInfo.setUserName(userName);
             loginInfo.setCompanyId(rtUser.getCompanyId());
             loginInfo.setToken(UUID.randomUUID().toString());
             loginInfo.setLoginTime(DateUtil.getDateTime());
-            String loginStr = JSON.toJSONString(loginInfo);
             //记录用户是否登录，解决重复登录问题
-            redisUtil.set(String.format(RedisConstants.LOGIN_TOKEN,userId),loginInfo.getToken());
+            redisUtil.set(String.format(RedisConstants.LOGIN_TOKEN,userName),loginInfo.getToken());
             //记录用户登录信息
-            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,loginInfo.getToken()),loginStr);
-            result = loginStr;
+            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,loginInfo.getToken()),loginInfo);
+            result = loginInfo;
         }else {//如果已经登录过，直接返回
-            String token = String.valueOf(redisUtil.get(String.format(RedisConstants.LOGIN_TOKEN,userId)));
-            result = String.valueOf(redisUtil.get(String.format(RedisConstants.LOGIN_INFO,token)));
+            String token = String.valueOf(redisUtil.get(String.format(RedisConstants.LOGIN_TOKEN,userName)));
+            result = (LoginInfo)redisUtil.get(String.format(RedisConstants.LOGIN_INFO,token));
         }
-        return result;
+        return JSON.toJSONString(result);
     }
 
     /**
      * 注册
-     * @param userId
+     * @param companyId
      * @param userName
      * @param password
      * @return
      */
     @PostMapping(value = "register")
-    public String registerUser(@RequestParam("userId") String userId,
-                               @RequestParam("userName") String userName,
+    public String registerUser(@RequestParam("userName") String userName,
                                @RequestParam("password") String password,
                                @RequestParam("companyId") String companyId){
-        userService.registerUser(userId,companyId,userName,password);
+        userService.registerUser(companyId,userName,password);
         return "";
     }
 
@@ -96,8 +94,8 @@ public class LoginController {
         String token = request.getParameter("token");
         LoginInfo loginInfo = JSON.parseObject((String) redisUtil.get(String.format(RedisConstants.LOGIN_INFO,token)),
                 LoginInfo.class) ;
-        String userId = loginInfo.getUserId();
-        redisUtil.del(String.format(RedisConstants.LOGIN_TOKEN,userId));
+        String userName = loginInfo.getUserName();
+        redisUtil.del(String.format(RedisConstants.LOGIN_TOKEN,userName));
         redisUtil.del(String.format(RedisConstants.LOGIN_INFO,token));
         return "注销成功";
     }

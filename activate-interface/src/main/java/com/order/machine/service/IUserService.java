@@ -11,5 +11,5 @@ public interface IUserService {
 
     UserPo verifyUser(UserPo userPo);
 
-    void registerUser(String userId, String companyId, String userName, String password);
+    void registerUser(String companyId, String userName, String password);
 }

@@ -26,4 +26,28 @@
             </if>
         </where>
     </select>
+
+    <insert id="addOrderConfigByList" parameterType="com.order.machine.po.OrderConfigPo">
+        INSERT INTO tb_order_config(
+          id,
+          company_id,
+          order_id,
+          licence_count,
+          key1,
+          key2,
+          order_date
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+            #{item.id},
+            #{item.companyId},
+            #{item.orderId},
+            #{item.licenceCount},
+            #{item.key1},
+            #{item.key2},
+            #{item.orderDate}
+        )
+        </foreach>
+    </insert>
 </mapper>
