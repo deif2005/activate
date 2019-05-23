@@ -26,7 +26,8 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
     final String[] notLoginInterceptPaths = {
             "/login/**",
             "/index/**",
-            "/register/**"
+            "/register/**",
+            "/order/v1/activateMachine"
 //            "/order/**"
     };
 

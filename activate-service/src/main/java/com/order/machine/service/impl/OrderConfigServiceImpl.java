@@ -9,6 +9,7 @@ import com.order.machine.exception.LogicException;
 import com.order.machine.mapper.ActivateMapper;
 import com.order.machine.mapper.OrderConfigMapper;
 import com.order.machine.po.ActivatePo;
+import com.order.machine.po.BoxExchangePo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
 import com.order.machine.query.OrderConfigQuery;
@@ -55,21 +56,26 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
 
     /**
      * 导入订单配置信息
-     * @param filePath
+     * @param orderId
+     * @param companyId
+     * @param licenceCount
+     * @param dateStr
+     * @param key1
      */
     @Override
-    public void importOrderConfigInfo(String filePath){
-//        OrderConfigPo orderConfigPo = new OrderConfigPo();
-//        orderConfigPo.setId(UUID.randomUUID().toString());
-//        orderConfigPo.setCompanyId("1");
-//        orderConfigPo.setOrderId("tempOrderId001");
-//        orderConfigPo.setLicenceCount("10");
+    public void addOrderConfigInfo(String orderId,String companyId,String licenceCount,String dateStr,String key1){
+        OrderConfigPo orderConfigPo = new OrderConfigPo();
+        orderConfigPo.setId(UUID.randomUUID().toString());
+        orderConfigPo.setCompanyId(companyId);
+        orderConfigPo.setOrderId(orderId);
+        orderConfigPo.setLicenceCount(licenceCount);
+        orderConfigPo.setKey1(key1);
+        orderConfigPo.setOrderDate(dateStr);
 //        orderConfigPo.setSalt(VertifyCodeUtil.getRandromNum());
 //        //导入时自动生成该订单批次的授权KEY(订单号+盐值)
 //        String md5Str = MD5Utils.getMD5(orderConfigPo.getOrderId()+orderConfigPo.getSalt());
 //        orderConfigPo.setLicenceKey(md5Str);
-//        orderConfigMapper.insertSelective(orderConfigPo);
-        importOrderExcelFile(filePath);
+        orderConfigMapper.insertSelective(orderConfigPo);
     }
 
     private void importOrderExcelFile(String filePath){
@@ -144,15 +150,16 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
 
     /**
      * 授权
-     * @param activatePo
+     * @param boxExchangePo
      * @return
      */
     @Transactional
     @Override
-    public String checkActivate(ActivatePo activatePo){
-        String licenceKey = verifyOrderId(activatePo.getOrderId());
+    public String checkActivate(BoxExchangePo boxExchangePo){
+        String licenceKey = verifyOrderId(boxExchangePo.getKey1());
         if (!Strings.isNullOrEmpty(licenceKey)){
-            String activateKey = verifyChipSn(activatePo.getOrderId(), activatePo.getChipSn(), licenceKey);
+            String activateKey = verifyChipSn(boxExchangePo.getKey1(),boxExchangePo.getKey2(),boxExchangePo.getKey3(),
+                    licenceKey);
             return activateKey;
         }
         return "";
@@ -173,7 +180,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         criteria.andCondition("activate_count < licence_count");
         OrderConfigPo rt = orderConfigMapper.selectOneByExample(example);
         if (null != rt)
-            result = rt.getLicenceKey();
+            result = rt.getKey1();
         return result;
     }
 
@@ -181,10 +188,11 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * 验证机器码信息
      * @param orderId
      * @param chipSn
+     * @param dateStr
      * @param licenceKey
      * @return
      */
-    private String verifyChipSn(String orderId, String chipSn, String licenceKey){
+    private String verifyChipSn(String orderId, String chipSn, String dateStr, String licenceKey){
         String aesKey;
         ActivatePo activatePo = new ActivatePo();
         activatePo.setChipSn(chipSn);
@@ -202,7 +210,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         }
         try {
             //获取授权加密信息
-            aesKey = AESUtil.aesEncrypt(activatePo.getChipSn(),licenceKey);
+            aesKey = AESUtil.aesEncrypt(activatePo.getChipSn()+dateStr,licenceKey);
         }catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -210,9 +218,9 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
     }
 
     public static void main(String[] args) {
-        String[] strings = "12345678_01_1905_0001".split("_");// orderConfigPo.getOrderId().split("_");
-        System.out.println(strings[1]);
-        String d ="20"+strings[2].substring(0,2)+"-"+strings[2].substring(2,4)+"-"+"01";
-        System.out.println(d);
+//        String[] strings = "12345678_01_1905_0001".split("_");// orderConfigPo.getOrderId().split("_");
+//        System.out.println(strings[1]);
+//        String d ="20"+strings[2].substring(0,2)+"-"+strings[2].substring(2,4)+"-"+"01";
+//        System.out.println(DateUtil.getFormateDate("yyyyMMdd"));
     }
 }

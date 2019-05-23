@@ -19,4 +19,6 @@ public interface IOrderDataService {
     PageInfo<ActivatePo> listActivateMachine(ActivateMachineQuery activateMachineQuery);
 
     PageInfo<OrderStatistics> listOrderCount(OrderStatisticsQuery orderStatisticsQuery);
+
+    Integer getMaxOrderSn(String companyId);
 }

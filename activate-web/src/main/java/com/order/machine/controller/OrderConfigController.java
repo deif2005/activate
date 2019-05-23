@@ -7,12 +7,17 @@ import com.order.machine.common_const.CommonEnum;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.exception.LogicException;
 import com.order.machine.po.ActivatePo;
+import com.order.machine.po.BoxExchangePo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
 import com.order.machine.query.OrderConfigQuery;
 import com.order.machine.query.OrderStatisticsQuery;
 import com.order.machine.service.IOrderConfigService;
 import com.order.machine.service.IOrderDataService;
+import com.wd.encrypt.AESUtil;
+import com.wd.util.DateUtil;
+import com.wd.util.UUIDGenerator;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,13 +35,24 @@ public class OrderConfigController {
     IOrderDataService orderDataService;
 
     /**
-     * 导入订单授权报盘表格
+     * 添加订单信息
      * @return
      */
     @PostMapping("/v1/addOrderConfig")
-    public String addOrderConfig(){
+    public String addOrderConfig(@RequestParam("companyId") String companyId,
+                                 @RequestParam("chipSn") String chipSn,
+                                 @RequestParam("licenceCount") String licenceCount,
+                                 @RequestParam("dateStr") String dateStr,
+                                 @RequestParam(value = "key1",required = false) String key1){
+        StringBuilder sb = new StringBuilder();
+        sb.append(companyId).append(chipSn).append(dateStr);
+        if (Strings.isNullOrEmpty(key1)){
+            key1 = UUIDGenerator.getUUID();
+        }
+        Integer sn = orderDataService.getMaxOrderSn(companyId);
+        sb.append(sn);
         //上传文档
-        orderConfigService.importOrderConfigInfo("D:\\zzy\\machine-activate\\file\\order.xlsx");
+        orderConfigService.addOrderConfigInfo(sb.toString(),companyId,licenceCount,dateStr,key1);
         return "";
     }
 
@@ -104,14 +120,22 @@ public class OrderConfigController {
      */
     @PostMapping("v1/activateMachine")
     public String activateMachine(@RequestParam("activateParam") String activateParam){
-        ActivatePo activatePo = JSON.parseObject(activateParam,ActivatePo.class);
-        if (Strings.isNullOrEmpty(activatePo.getOrderId()))
+        String decryptStr="";
+        try {
+            decryptStr = AESUtil.aesDecrypt(activateParam,"");
+        }catch (Exception e){
+            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
+                    "非法信息交换");
+        }
+        BoxExchangePo boxExchangePo = JSON.parseObject(decryptStr,BoxExchangePo.class);
+        if (Strings.isNullOrEmpty(boxExchangePo.getKey1()))
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "订单号未提供");
-        if (Strings.isNullOrEmpty(activatePo.getChipSn()))
+        if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "机顶盒的ID未提供");
-        String result = orderConfigService.checkActivate(activatePo);
+
+        String result = orderConfigService.checkActivate(boxExchangePo);
         return result;
     }
 

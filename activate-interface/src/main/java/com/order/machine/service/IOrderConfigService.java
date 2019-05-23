@@ -2,6 +2,7 @@ package com.order.machine.service;
 
 import com.github.pagehelper.PageInfo;
 import com.order.machine.po.ActivatePo;
+import com.order.machine.po.BoxExchangePo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
 import com.order.machine.query.OrderConfigQuery;
@@ -12,12 +13,12 @@ import com.order.machine.query.OrderConfigQuery;
  */
 public interface IOrderConfigService {
 
-    void importOrderConfigInfo(String filePath);
+    void addOrderConfigInfo(String orderId,String companyId,String licenceCount,String dateStr,String key1);
 
     OrderConfigPo getOrderConfig(String id);
 
     void modifyOrderConfig(OrderConfigPo orderConfigPo);
 
-    String checkActivate(ActivatePo activatePo);
+    String checkActivate(BoxExchangePo boxExchangePo);
 
 }

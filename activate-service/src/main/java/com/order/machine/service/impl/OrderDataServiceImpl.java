@@ -80,4 +80,17 @@ public class OrderDataServiceImpl implements IOrderDataService{
                 orderStatisticsQuery.getOrderDateEnd()));
         return orderStatisticsPageInfo;
     }
+
+    /**
+     * 获取最大订单号
+     * @param companyId
+     * @return
+     */
+    @Override
+    public Integer getMaxOrderSn(String companyId){
+        OrderConfigPo orderConfigPo = new OrderConfigPo();
+        orderConfigPo.setCompanyId(companyId);
+        int count = orderConfigMapper.selectCount(orderConfigPo);
+        return ++count;
+    }
 }
