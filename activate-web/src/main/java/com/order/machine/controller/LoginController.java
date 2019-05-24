@@ -45,7 +45,7 @@ public class LoginController {
      * @return
      */
     @PostMapping(value = "userLogin")
-    @NoRestReturn
+//    @NoRestReturn
     public String login(@RequestParam("userName") String userName,
                         @RequestParam("password") String password){
         LoginInfo result;

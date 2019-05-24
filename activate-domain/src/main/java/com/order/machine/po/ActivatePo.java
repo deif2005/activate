@@ -15,6 +15,7 @@ public class ActivatePo {
     private String companyId;
     private String orderId;
     private String chipSn;
+    private Integer activateTimes;
     private String updateTime;
     private String createTime;
 
@@ -48,6 +49,14 @@ public class ActivatePo {
 
     public void setChipSn(String chipSn) {
         this.chipSn = chipSn;
+    }
+
+    public Integer getActivateTimes() {
+        return activateTimes;
+    }
+
+    public void setActivateTimes(Integer activateTimes) {
+        this.activateTimes = activateTimes;
     }
 
     public String getUpdateTime() {

@@ -63,7 +63,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @param key1
      */
     @Override
-    public void addOrderConfigInfo(String orderId,String companyId,String licenceCount,String dateStr,String key1){
+    public void addOrderConfigInfo(String orderId,String companyId,Integer licenceCount,String dateStr,String key1){
         OrderConfigPo orderConfigPo = new OrderConfigPo();
         orderConfigPo.setId(UUID.randomUUID().toString());
         orderConfigPo.setCompanyId(companyId);
@@ -102,7 +102,8 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
             for(int rIndex = firstRowIndex; rIndex <= lastRowIndex; rIndex++) {   //遍历行
                 Row row = sheet.getRow(rIndex);
                 if (row != null) {
-                    OrderConfigPo orderConfigPo = new OrderConfigPo(row.getCell(0).toString(),row.getCell(1).toString(),
+                    OrderConfigPo orderConfigPo = new OrderConfigPo(row.getCell(0).toString(),
+                            Integer.valueOf(row.getCell(1).toString()),
                             row.getCell(2).toString(),row.getCell(3).toString());
                     orderConfigPo.setId(UUID.randomUUID().toString());
                     orderConfigPo.setOrderDate(orderConfigPo.getOrderId());
@@ -155,11 +156,10 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      */
     @Transactional
     @Override
-    public String checkActivate(BoxExchangePo boxExchangePo){
+    public String checkActivate(BoxExchangePo boxExchangePo,String dateStr){
         String licenceKey = verifyOrderId(boxExchangePo.getKey1());
         if (!Strings.isNullOrEmpty(licenceKey)){
-            String activateKey = verifyChipSn(boxExchangePo.getKey1(),boxExchangePo.getKey2(),boxExchangePo.getKey3(),
-                    licenceKey);
+            String activateKey = verifyChipSn(boxExchangePo.getKey1(),boxExchangePo.getKey2(),dateStr,licenceKey);
             return activateKey;
         }
         return "";
@@ -175,10 +175,16 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         Example example = new Example(OrderConfigPo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("orderId",orderId);
-        criteria.andEqualTo("isClose","1");
+//        criteria.andEqualTo("isClose","1");
         //判断激活总数小于可激活总数
-        criteria.andCondition("activate_count < licence_count");
+//        criteria.andCondition("activate_count < licence_count");
         OrderConfigPo rt = orderConfigMapper.selectOneByExample(example);
+        if ("2".equals(rt.getIsClose()))
+            LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                    "该批次已停止授权");
+        if (rt.getActivateCount() < rt.getLicenceCount())
+            LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                    "授权数量已超");
         if (null != rt)
             result = rt.getKey1();
         return result;
@@ -200,11 +206,13 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         ActivatePo rt = activateMapper.selectOne(activatePo);
         if (null == rt){
             activatePo.setId(UUID.randomUUID().toString());
+            activatePo.setActivateTimes(1);
             //新增
             activateMapper.insertSelective(activatePo);
             orderConfigMapper.updateActivateCount(orderId);
         }else {
             activatePo.setId(rt.getId());
+            activatePo.setActivateTimes(rt.getActivateTimes()+1);
             activatePo.setUpdateTime(DateUtil.getDateTime());
             activateMapper.updateByPrimaryKeySelective(activatePo);
         }

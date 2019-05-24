@@ -19,6 +19,7 @@ import com.wd.util.DateUtil;
 import com.wd.util.UUIDGenerator;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,6 +34,8 @@ public class OrderConfigController {
     IOrderConfigService orderConfigService;
     @Autowired
     IOrderDataService orderDataService;
+    @Autowired
+    private Environment environment;
 
     /**
      * 添加订单信息
@@ -41,7 +44,7 @@ public class OrderConfigController {
     @PostMapping("/v1/addOrderConfig")
     public String addOrderConfig(@RequestParam("companyId") String companyId,
                                  @RequestParam("chipSn") String chipSn,
-                                 @RequestParam("licenceCount") String licenceCount,
+                                 @RequestParam("licenceCount") Integer licenceCount,
                                  @RequestParam("dateStr") String dateStr,
                                  @RequestParam(value = "key1",required = false) String key1){
         StringBuilder sb = new StringBuilder();
@@ -122,7 +125,7 @@ public class OrderConfigController {
     public String activateMachine(@RequestParam("activateParam") String activateParam){
         String decryptStr="";
         try {
-            decryptStr = AESUtil.aesDecrypt(activateParam,"");
+            decryptStr = AESUtil.aesDecrypt(activateParam,environment.getProperty("eas.key2"));
         }catch (Exception e){
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
                     "非法信息交换");
@@ -134,7 +137,10 @@ public class OrderConfigController {
         if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "机顶盒的ID未提供");
-        String result = orderConfigService.checkActivate(boxExchangePo);
+        //截取出key2中的sn号和时间戳
+//        boxExchangePo.getKey2()
+        String dateStr="";
+        String result = orderConfigService.checkActivate(boxExchangePo,dateStr);
         return result;
     }
 

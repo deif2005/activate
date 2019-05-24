@@ -14,11 +14,10 @@ public class OrderConfigPo {
     private String id;
     private String companyId;
     private String orderId;
-    private String licenceCount;
+    private Integer licenceCount;
     private String licenceKey;
     private String key1;
-    private String key2;
-    private String activateCount;
+    private Integer activateCount;
     private String isClose;
     private String status;
     private String salt;
@@ -28,11 +27,10 @@ public class OrderConfigPo {
     public OrderConfigPo(){
     }
 
-    public OrderConfigPo(String orderId, String licenceCount, String key1, String key2){
+    public OrderConfigPo(String orderId, Integer licenceCount, String key1, String key2){
         this.orderId=orderId;
         this.licenceCount=licenceCount;
         this.key1=key1;
-        this.key2=key2;
     }
 
     public String getId() {
@@ -59,19 +57,19 @@ public class OrderConfigPo {
         this.orderId = orderId;
     }
 
-    public String getLicenceCount() {
+    public Integer getLicenceCount() {
         return licenceCount;
     }
 
-    public void setLicenceCount(String licenceCount) {
+    public void setLicenceCount(Integer licenceCount) {
         this.licenceCount = licenceCount;
     }
 
-    public String getActivateCount() {
+    public Integer getActivateCount() {
         return activateCount;
     }
 
-    public void setActivateCount(String activateCount) {
+    public void setActivateCount(Integer activateCount) {
         this.activateCount = activateCount;
     }
 
@@ -89,14 +87,6 @@ public class OrderConfigPo {
 
     public void setKey1(String key1) {
         this.key1 = key1;
-    }
-
-    public String getKey2() {
-        return key2;
-    }
-
-    public void setKey2(String key2) {
-        this.key2 = key2;
     }
 
     public String getIsClose() {

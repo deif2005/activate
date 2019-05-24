@@ -13,12 +13,12 @@ import com.order.machine.query.OrderConfigQuery;
  */
 public interface IOrderConfigService {
 
-    void addOrderConfigInfo(String orderId,String companyId,String licenceCount,String dateStr,String key1);
+    void addOrderConfigInfo(String orderId,String companyId,Integer licenceCount,String dateStr,String key1);
 
     OrderConfigPo getOrderConfig(String id);
 
     void modifyOrderConfig(OrderConfigPo orderConfigPo);
 
-    String checkActivate(BoxExchangePo boxExchangePo);
+    String checkActivate(BoxExchangePo boxExchangePo,String dateStr);
 
 }
