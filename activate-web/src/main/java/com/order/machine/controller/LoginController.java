@@ -1,6 +1,7 @@
 package com.order.machine.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.order.machine.ResultHandle.NoRestReturn;
 import com.order.machine.common_const.CommonConst;
 import com.order.machine.dto.LoginInfo;
 import com.order.machine.po.UserPo;
@@ -43,7 +44,8 @@ public class LoginController {
      * @param password
      * @return
      */
-    @PostMapping(value = "login")
+    @PostMapping(value = "userLogin")
+    @NoRestReturn
     public String login(@RequestParam("userName") String userName,
                         @RequestParam("password") String password){
         LoginInfo result;

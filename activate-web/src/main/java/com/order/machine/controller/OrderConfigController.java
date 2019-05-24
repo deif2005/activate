@@ -134,7 +134,6 @@ public class OrderConfigController {
         if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "机顶盒的ID未提供");
-
         String result = orderConfigService.checkActivate(boxExchangePo);
         return result;
     }
