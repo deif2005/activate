@@ -9,6 +9,6 @@ public class RedisConstants {
     //登录信息
     public static final String LOGIN_INFO="LOGIN_INFO;TOKEN:%s";
     //授权口令
-    public static final String LOGIN_TOKEN="LOGIN_TOKEN;USER_ID:%s";
+    public static final String LOGIN_TOKEN="LOGIN_TOKEN;USER_NAME:%s";
 
 }

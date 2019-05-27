@@ -8,6 +8,4 @@ import tk.mybatis.mapper.common.Mapper;
  * @date 2019-04-16
  */
 public interface UserMapper extends Mapper<UserPo>{
-
-
 }

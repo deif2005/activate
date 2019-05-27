@@ -1,12 +1,15 @@
 package com.order.machine.service.impl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.mapper.ActivateMapper;
+import com.order.machine.mapper.CompanyMapper;
 import com.order.machine.mapper.OrderConfigMapper;
 import com.order.machine.po.ActivatePo;
+import com.order.machine.po.CompanyPo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
 import com.order.machine.query.OrderConfigQuery;
@@ -15,6 +18,8 @@ import com.order.machine.service.IOrderDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
+
+import java.util.List;
 
 /**
  * @author miou
@@ -27,6 +32,8 @@ public class OrderDataServiceImpl implements IOrderDataService{
     OrderConfigMapper orderConfigMapper;
     @Autowired
     ActivateMapper activateMapper;
+    @Autowired
+    CompanyMapper companyMapper;
 
     /**
      * 订单配置信息列表
@@ -92,5 +99,28 @@ public class OrderDataServiceImpl implements IOrderDataService{
         orderConfigPo.setCompanyId(companyId);
         int count = orderConfigMapper.selectCount(orderConfigPo);
         return ++count;
+    }
+
+    /**
+     * 增加客户信息
+     * @param companyPo
+     */
+    @Override
+    public void addCompanyInfo(CompanyPo companyPo){
+        companyMapper.insertSelective(companyPo);
+    }
+
+    @Override
+    public void updateCompanyInfo(CompanyPo companyPo){
+        companyMapper.updateByPrimaryKeySelective(companyPo);
+    }
+
+    @Override
+    public PageInfo<CompanyPo> listCompany(Page page){
+        CompanyPo companyPo = new CompanyPo();
+        companyPo.setStatus("1");
+        PageInfo<CompanyPo> companyPoPageInfo = PageHelper.startPage(page.getPageNum(),page.getPageSize()).
+                doSelectPageInfo(()->companyMapper.select(companyPo));
+        return companyPoPageInfo;
     }
 }

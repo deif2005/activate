@@ -5,6 +5,7 @@ package com.order.machine.po;
  * @date 2019-05-23
  */
 public class BoxExchangePo {
+
     private String key1;//orderId
     private String key2;//chipsn+timestamp串
 

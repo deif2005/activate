@@ -95,7 +95,6 @@ public class RedisUtil {
     public void set(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);
     }
-
     /**
      * 普通缓存放入并设置时间
      *

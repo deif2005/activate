@@ -62,11 +62,12 @@ public class LoginController {
             //记录用户是否登录，解决重复登录问题
             redisUtil.set(String.format(RedisConstants.LOGIN_TOKEN,userName),loginInfo.getToken());
             //记录用户登录信息
-            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,loginInfo.getToken()),loginInfo);
+            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,loginInfo.getToken()),JSON.toJSONString(loginInfo));
             result = loginInfo;
         }else {//如果已经登录过，直接返回
             String token = String.valueOf(redisUtil.get(String.format(RedisConstants.LOGIN_TOKEN,userName)));
-            result = (LoginInfo)redisUtil.get(String.format(RedisConstants.LOGIN_INFO,token));
+            result = JSON.parseObject((String) redisUtil.get(String.format(RedisConstants.LOGIN_INFO,token)),
+                    LoginInfo.class);// (LoginInfo);
         }
         return JSON.toJSONString(result);
     }

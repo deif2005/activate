@@ -1,8 +1,10 @@
 package com.order.machine.service;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.po.ActivatePo;
+import com.order.machine.po.CompanyPo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
 import com.order.machine.query.OrderConfigQuery;
@@ -21,4 +23,10 @@ public interface IOrderDataService {
     PageInfo<OrderStatistics> listOrderCount(OrderStatisticsQuery orderStatisticsQuery);
 
     Integer getMaxOrderSn(String companyId);
+
+    void addCompanyInfo(CompanyPo companyPo);
+
+    void updateCompanyInfo(CompanyPo companyPo);
+
+    PageInfo<CompanyPo> listCompany(Page page);
 }
