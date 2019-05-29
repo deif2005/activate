@@ -3,6 +3,7 @@ package com.order.machine.controller;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.order.machine.StringUtils;
 import com.order.machine.common_const.CommonEnum;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.exception.LogicException;
@@ -20,6 +21,7 @@ import com.wd.util.UUIDGenerator;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -39,6 +41,11 @@ public class OrderConfigController {
 
     /**
      * 添加订单信息
+     * @param companyId
+     * @param chipSn
+     * @param licenceCount
+     * @param dateStr
+     * @param key1
      * @return
      */
     @PostMapping("/v1/addOrderConfig")
@@ -48,12 +55,14 @@ public class OrderConfigController {
                                  @RequestParam("dateStr") String dateStr,
                                  @RequestParam(value = "key1",required = false) String key1){
         StringBuilder sb = new StringBuilder();
-        sb.append(companyId).append(chipSn).append(dateStr);
+        companyId = StringUtils.completeFixCode(companyId,3);
+        sb.append(companyId).append("_").append(chipSn).append("_").append(dateStr).append("_");
         if (Strings.isNullOrEmpty(key1)){
             key1 = UUIDGenerator.getUUID();
         }
         Integer sn = orderDataService.getMaxOrderSn(companyId);
-        sb.append(sn);
+        String s = StringUtils.completeFixCode(String.valueOf(sn),4);
+        sb.append(s);
         //上传文档
         orderConfigService.addOrderConfigInfo(sb.toString(),companyId,licenceCount,dateStr,key1);
         return "";
@@ -84,7 +93,7 @@ public class OrderConfigController {
     @GetMapping("v1/listOrderConfig")
     public String listOrderConfigInfo(@RequestParam("beginDate") String beginDate,
                                       @RequestParam("endDate") String endDate,
-                                      @RequestParam("companyId") String companyId,
+                                      @RequestParam(value = "companyId",required = false) String companyId,
                                       @RequestParam("pageNo") Integer pageNo,
                                       @RequestParam("pageSize") Integer pageSize,
                                       @RequestParam(value = "isClose", required = false) String isClose){
@@ -108,10 +117,17 @@ public class OrderConfigController {
      */
     @PostMapping("v1/updateOrderConfig")
     public String updateOrderConfig(@RequestParam("id") String id,
-                                    @RequestParam("isClose") Integer isClose){
+                                    @RequestParam(value="licenceCount", required = false) Integer licenceCount,
+                                    @RequestParam(value = "isClose",required = false) String isClose) throws
+            MissingServletRequestParameterException{
         OrderConfigPo orderConfigPo = new OrderConfigPo();
         orderConfigPo.setId(id);
-        orderConfigPo.setIsClose(String.valueOf(isClose));
+        if (licenceCount == null && Strings.isNullOrEmpty(isClose))
+            throw new MissingServletRequestParameterException("[licenceCount,isClose]","[Integer,String]");
+        if (licenceCount != null)
+            orderConfigPo.setLicenceCount(licenceCount);
+        if (!Strings.isNullOrEmpty(isClose))
+            orderConfigPo.setIsClose(isClose);
         orderConfigService.modifyOrderConfig(orderConfigPo);
         return "";
     }
@@ -123,7 +139,7 @@ public class OrderConfigController {
      */
     @PostMapping("v1/activateMachine")
     public String activateMachine(@RequestParam("activateParam") String activateParam){
-        String decryptStr="";
+        String decryptStr;
         try {
             decryptStr = AESUtil.aesDecrypt(activateParam,environment.getProperty("eas.key2"));
         }catch (Exception e){
@@ -138,9 +154,10 @@ public class OrderConfigController {
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "机顶盒的ID未提供");
         //截取出key2中的sn号和时间戳
-//        boxExchangePo.getKey2()
-        String dateStr="";
-        String result = orderConfigService.checkActivate(boxExchangePo,dateStr);
+        String key2 = boxExchangePo.getKey2();
+        String chipSn = key2.substring(0,18);
+        String dateStr = key2.substring(18,31);
+        String result = orderConfigService.checkActivate(boxExchangePo.getKey1(),chipSn,dateStr);
         return result;
     }
 
@@ -195,6 +212,4 @@ public class OrderConfigController {
         String result = JSON.toJSONString(orderStatisticsPageInfo);
         return result;
     }
-
-
 }

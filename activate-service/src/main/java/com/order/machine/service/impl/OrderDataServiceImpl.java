@@ -46,7 +46,7 @@ public class OrderDataServiceImpl implements IOrderDataService{
         Example.Criteria criteria = example.createCriteria();
         //如果是管理员,可以查看所有订单
         criteria.andEqualTo("companyId",orderConfigQuery.getCompanyId());
-        criteria.andBetween("createTime",orderConfigQuery.getBeginDate(),orderConfigQuery.getEndDate());
+        criteria.andBetween("orderDate",orderConfigQuery.getBeginDate(),orderConfigQuery.getEndDate());
         criteria.andEqualTo("isClose",orderConfigQuery.getIsClose());
         PageInfo<OrderConfigPo> orderConfigPoPageInfo = PageHelper.startPage(orderConfigQuery.getPageNo(),
                 orderConfigQuery.getPageSize())

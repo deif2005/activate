@@ -19,6 +19,6 @@ public interface IOrderConfigService {
 
     void modifyOrderConfig(OrderConfigPo orderConfigPo);
 
-    String checkActivate(BoxExchangePo boxExchangePo,String dateStr);
+    String checkActivate(String orderId,String chipSn,String dateStr);
 
 }

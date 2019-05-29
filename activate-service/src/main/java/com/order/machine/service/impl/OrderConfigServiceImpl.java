@@ -34,7 +34,9 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -151,15 +153,17 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
 
     /**
      * 授权
-     * @param boxExchangePo
+     * @param orderId
+     * @param chipSn
+     * @param dateStr
      * @return
      */
     @Transactional
     @Override
-    public String checkActivate(BoxExchangePo boxExchangePo,String dateStr){
-        String licenceKey = verifyOrderId(boxExchangePo.getKey1());
+    public String checkActivate(String orderId,String chipSn,String dateStr){
+        String licenceKey = verifyOrderId(orderId);
         if (!Strings.isNullOrEmpty(licenceKey)){
-            String activateKey = verifyChipSn(boxExchangePo.getKey1(),boxExchangePo.getKey2(),dateStr,licenceKey);
+            String activateKey = verifyChipSn(orderId,chipSn,dateStr,licenceKey);
             return activateKey;
         }
         return "";
@@ -226,9 +230,32 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
     }
 
     public static void main(String[] args) {
-//        String[] strings = "12345678_01_1905_0001".split("_");// orderConfigPo.getOrderId().split("_");
-//        System.out.println(strings[1]);
-//        String d ="20"+strings[2].substring(0,2)+"-"+strings[2].substring(2,4)+"-"+"01";
-//        System.out.println(DateUtil.getFormateDate("yyyyMMdd"));
+//        String s ="12345678AABBCCDDEE";
+//        System.out.println(s.substring(0,8));
+//        System.out.println(s.substring(8,18));
+
+//        System.out.println(System.currentTimeMillis());
+//        try {
+//            Thread.sleep(1000);
+//        }catch (Exception e){
+//
+//        }
+//        System.out.println(System.currentTimeMillis());
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        long lt = System.currentTimeMillis();
+//        Date date = new Date(lt);
+//        String res = simpleDateFormat.format(date);
+//        System.out.println(res);
+        try {
+//            String s = AESUtil.aesEncrypt("{\n" +
+//                    "\t\"key1\": \"001_12345678AABBCCDDEE_20190529_0001\",\n" +
+//                    "\t\"key2\": \"12345678AABBCCDDEE1559119143650\"\n" +
+//                    "}","ea87587081ed11e9b0987c7a915348fe");
+            String s = AESUtil.aesDecrypt("hcoKbySKC/cfLb7RLmhxGqoMI8i3J/IxUBuPDy+y8Es=",
+                    "ca242bef336c46a9b4e80902f3fe6d1b");
+            System.out.println(s);
+        }catch (Exception e){
+
+        }
     }
 }

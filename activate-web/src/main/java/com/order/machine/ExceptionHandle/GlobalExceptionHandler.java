@@ -9,6 +9,7 @@ import com.order.machine.model.RestResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,7 +54,11 @@ public class GlobalExceptionHandler {
         } else if (e instanceof MissingServletRequestParameterException){
             result.setCode(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue());
             result.setErrorMessage("请求参数错误");
-        } else
+        } else if (e instanceof HttpRequestMethodNotSupportedException){
+            result.setCode(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue());
+            result.setErrorMessage("请求方法类型错误");
+        }
+        else
             //对系统级异常进行日志记录
             logger.error("系统异常:" + e.getMessage(), e);
         return JSON.toJSONString(result);

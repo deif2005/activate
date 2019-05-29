@@ -20,18 +20,4 @@ public class encryptTools {
         return result;
     }
 
-    public static void main(String[] args) {
-        System.out.println(System.currentTimeMillis());
-        try {
-            Thread.sleep(1000);
-        }catch (Exception e){
-
-        }
-        System.out.println(System.currentTimeMillis());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long lt = System.currentTimeMillis();
-        Date date = new Date(lt);
-        String res = simpleDateFormat.format(date);
-        System.out.println(res);
-    }
 }

@@ -15,12 +15,10 @@ public class OrderConfigPo {
     private String companyId;
     private String orderId;
     private Integer licenceCount;
-    private String licenceKey;
     private String key1;
     private Integer activateCount;
     private String isClose;
     private String status;
-    private String salt;
     private String orderDate;
     private String createTime;
 
@@ -73,14 +71,6 @@ public class OrderConfigPo {
         this.activateCount = activateCount;
     }
 
-    public String getLicenceKey() {
-        return licenceKey;
-    }
-
-    public void setLicenceKey(String licenceKey) {
-        this.licenceKey = licenceKey;
-    }
-
     public String getKey1() {
         return key1;
     }
@@ -103,14 +93,6 @@ public class OrderConfigPo {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getOrderDate() {
