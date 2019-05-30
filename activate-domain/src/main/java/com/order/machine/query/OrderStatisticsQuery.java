@@ -8,6 +8,7 @@ import com.order.machine.base.Page;
  */
 public class OrderStatisticsQuery extends Page {
     private String companyId;
+    private String orderId;
     private String orderDateBegin;
     private String orderDateEnd;
 
@@ -17,6 +18,14 @@ public class OrderStatisticsQuery extends Page {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getOrderDateBegin() {

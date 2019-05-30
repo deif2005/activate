@@ -198,12 +198,14 @@ public class OrderConfigController {
      */
     @GetMapping("v1/listOrderCount")
     public String listOrderCount(@RequestParam(value = "companyId", required = false) String companyId,
+                                 @RequestParam(value = "orderId", required = false) String orderId,
                                  @RequestParam(value = "beginDate") String beginDate,
                                  @RequestParam(value = "endDate") String endDate,
                                  @RequestParam("pageNo") Integer pageNo,
                                  @RequestParam("pageSize") Integer pageSize){
         OrderStatisticsQuery orderStatisticsQuery = new OrderStatisticsQuery();
         orderStatisticsQuery.setCompanyId(companyId);
+        orderStatisticsQuery.setOrderId(orderId);
         orderStatisticsQuery.setOrderDateBegin(beginDate);
         orderStatisticsQuery.setOrderDateEnd(endDate);
         orderStatisticsQuery.setPageNo(pageNo);

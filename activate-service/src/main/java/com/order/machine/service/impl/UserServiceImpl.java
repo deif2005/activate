@@ -48,12 +48,11 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * 用户注册
-     * @param companyId
      * @param userName
      * @param password
      */
     @Override
-    public void registerUser(String companyId,String userName,String password){
+    public void registerUser(String userName,String password){
         Example example = new Example(UserPo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userName",userName);
@@ -64,7 +63,7 @@ public class UserServiceImpl implements IUserService {
         String salt = VertifyCodeUtil.getRandromNum();
         String md5Pwd = MD5Utils.getMD5(password + salt);
         UserPo user = new UserPo();
-        user.setCompanyId(companyId);
+//        user.setCompanyId(companyId);
         user.setUserName(userName);
         user.setPassword(md5Pwd);
         user.setSalt(salt);

@@ -15,18 +15,18 @@ public class UserPo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String userId;
-    private String companyId;
+//    private String companyId;
     private String userName;
     private String password;
     private String salt;
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
+//    public String getCompanyId() {
+//        return companyId;
+//    }
+//
+//    public void setCompanyId(String companyId) {
+//        this.companyId = companyId;
+//    }
 
     public String getUserId() {
         return userId;

@@ -19,7 +19,10 @@
         INNER JOIN tb_company b ON a.company_id=b.company_id
         <where>
             <if test="companyId != '' and companyId != null">
-              a.company_id=#{companyId}
+                a.company_id=#{companyId}
+            </if>
+            <if test="orderId != '' and orderId != null">
+                AND a.order_id=#{orderId}
             </if>
             <if test="orderDateBegin != '' and orderDateBegin != null">
                 AND (order_date <![CDATA[>=]]> #{orderDateBegin} AND order_date <![CDATA[<=]]> #{orderDateEnd})

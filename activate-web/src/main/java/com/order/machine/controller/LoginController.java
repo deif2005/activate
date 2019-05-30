@@ -52,11 +52,12 @@ public class LoginController {
         UserPo userPo = new UserPo();
         userPo.setUserName(userName);
         userPo.setPassword(password);
-        UserPo rtUser = userService.verifyUser(userPo);
+//        UserPo rtUser =
+        userService.verifyUser(userPo);
         if (!redisUtil.hasKey(String.format(RedisConstants.LOGIN_TOKEN,userName))){
             LoginInfo loginInfo = new LoginInfo();
             loginInfo.setUserName(userName);
-            loginInfo.setCompanyId(rtUser.getCompanyId());
+//            loginInfo.setCompanyId(rtUser.getCompanyId());
             loginInfo.setToken(UUID.randomUUID().toString());
             loginInfo.setLoginTime(DateUtil.getDateTime());
             //记录用户是否登录，解决重复登录问题
@@ -74,16 +75,14 @@ public class LoginController {
 
     /**
      * 注册
-     * @param companyId
      * @param userName
      * @param password
      * @return
      */
     @PostMapping(value = "register")
     public String registerUser(@RequestParam("userName") String userName,
-                               @RequestParam("password") String password,
-                               @RequestParam("companyId") String companyId){
-        userService.registerUser(companyId,userName,password);
+                               @RequestParam("password") String password){
+        userService.registerUser(userName,password);
         return "";
     }
 

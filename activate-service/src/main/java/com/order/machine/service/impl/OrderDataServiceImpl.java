@@ -1,5 +1,6 @@
 package com.order.machine.service.impl;
 
+import com.github.pagehelper.ISelect;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -83,8 +84,8 @@ public class OrderDataServiceImpl implements IOrderDataService{
     public PageInfo<OrderStatistics> listOrderCount(OrderStatisticsQuery orderStatisticsQuery){
         PageInfo<OrderStatistics> orderStatisticsPageInfo = PageHelper.startPage(orderStatisticsQuery.getPageNo(),
                 orderStatisticsQuery.getPageSize()).doSelectPageInfo(()->orderConfigMapper.listOrderCount(
-                        orderStatisticsQuery.getCompanyId(),orderStatisticsQuery.getOrderDateBegin(),
-                orderStatisticsQuery.getOrderDateEnd()));
+                        orderStatisticsQuery.getCompanyId(),orderStatisticsQuery.getOrderId(),
+                orderStatisticsQuery.getOrderDateBegin(),orderStatisticsQuery.getOrderDateEnd()));
         return orderStatisticsPageInfo;
     }
 

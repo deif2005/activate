@@ -16,6 +16,7 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
     void updateActivateCount(@Param("orderId") String orderId);
 
     List<OrderStatistics> listOrderCount(@Param("companyId") String companyId,
+                                         @Param("orderId") String orderId,
                                          @Param("orderDateBegin") String orderDateBegin,
                                          @Param("orderDateEnd") String orderDateEnd);
 
