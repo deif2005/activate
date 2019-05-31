@@ -61,9 +61,11 @@ public class LoginController {
             loginInfo.setToken(UUID.randomUUID().toString());
             loginInfo.setLoginTime(DateUtil.getDateTime());
             //记录用户是否登录，解决重复登录问题
-            redisUtil.set(String.format(RedisConstants.LOGIN_TOKEN,userName),loginInfo.getToken());
+            redisUtil.set(String.format(RedisConstants.LOGIN_TOKEN,userName),loginInfo.getToken(),
+                    CommonConst.LOGININFO_EXPIRED);
             //记录用户登录信息
-            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,loginInfo.getToken()),JSON.toJSONString(loginInfo));
+            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,loginInfo.getToken()),JSON.toJSONString(loginInfo),
+                    CommonConst.LOGININFO_EXPIRED);
             result = loginInfo;
         }else {//如果已经登录过，直接返回
             String token = String.valueOf(redisUtil.get(String.format(RedisConstants.LOGIN_TOKEN,userName)));

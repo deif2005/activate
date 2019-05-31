@@ -12,4 +12,6 @@ public class CommonConst {
     public static final String CHAPTER_NONE="CHAPTER_NONE";
 
     public static final String LOGIN_KEY="LOGIN_KEY";
+
+    public static final Integer LOGININFO_EXPIRED=600;
 }
