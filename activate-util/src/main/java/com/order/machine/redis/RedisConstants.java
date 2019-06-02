@@ -7,7 +7,7 @@ package com.order.machine.redis;
 public class RedisConstants {
 
     //登录信息
-    public static final String LOGIN_INFO="LOGIN_INFO;TOKEN:%s";
+    public static final String LOGIN_INFO="LOGIN_INFO;USER_NAME:%s;TOKEN:%s";
     //授权口令
     public static final String LOGIN_TOKEN="LOGIN_TOKEN;USER_NAME:%s";
 

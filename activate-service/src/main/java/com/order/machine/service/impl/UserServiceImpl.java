@@ -23,6 +23,14 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     UserMapper userMapper;
 
+    @Override
+    public void updateUser(UserPo userPo){
+        Example example = new Example(UserPo.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userName",userPo.getUserName());
+        userMapper.updateByExampleSelective(userPo,example);
+    }
+
     /**
      * 验证用户信息
      * @param userPo

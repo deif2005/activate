@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,11 @@ public class RedisUtil {
 
 
     // =============================common============================
+
+    public HashSet<String> getKeys(String key){
+        HashSet<String> result = (HashSet<String>)redisTemplate.keys(key);
+        return result;
+    }
 
     /**
      * 指定缓存失效时间

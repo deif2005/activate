@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.order.machine.ResultHandle.NoRestReturn;
 import com.order.machine.common_const.CommonConst;
 import com.order.machine.dto.LoginInfo;
+import com.order.machine.mapper.UserMapper;
 import com.order.machine.po.UserPo;
 import com.order.machine.redis.RedisConstants;
 import com.order.machine.redis.RedisUtil;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.UUID;
 
 /**
@@ -48,29 +51,44 @@ public class LoginController {
 //    @NoRestReturn
     public String login(@RequestParam("userName") String userName,
                         @RequestParam("password") String password){
-        LoginInfo result;
+        LoginInfo result=null;
+        HashSet<String> keySet;
+        String key=null;
         UserPo userPo = new UserPo();
         userPo.setUserName(userName);
         userPo.setPassword(password);
-//        UserPo rtUser =
-        userService.verifyUser(userPo);
-        if (!redisUtil.hasKey(String.format(RedisConstants.LOGIN_TOKEN,userName))){
-            LoginInfo loginInfo = new LoginInfo();
-            loginInfo.setUserName(userName);
-//            loginInfo.setCompanyId(rtUser.getCompanyId());
+        UserPo rtUser = userService.verifyUser(userPo);
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setUserName(userName);
+        loginInfo.setLoginTime(DateUtil.getDateTime());
+        keySet = redisUtil.getKeys(String.format(RedisConstants.LOGIN_INFO,userName,"*"));
+        Iterator iterator = keySet.iterator();
+        while (iterator.hasNext()) {
+            key = String.valueOf(iterator.next());
+        }
+//        redisUtil.hasKey(key);
+        if (rtUser.getIsLogin().equals("0")){
             loginInfo.setToken(UUID.randomUUID().toString());
-            loginInfo.setLoginTime(DateUtil.getDateTime());
+            rtUser.setIsLogin("1");
+            userService.updateUser(rtUser);
             //记录用户是否登录，解决重复登录问题
-            redisUtil.set(String.format(RedisConstants.LOGIN_TOKEN,userName),loginInfo.getToken(),
-                    CommonConst.LOGININFO_EXPIRED);
+//            redisUtil.set(String.format(RedisConstants.LOGIN_TOKEN,userName),loginInfo.getToken(),
+//                    CommonConst.LOGININFO_EXPIRED);
             //记录用户登录信息
-            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,loginInfo.getToken()),JSON.toJSONString(loginInfo),
+            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,userName,loginInfo.getToken()),JSON.toJSONString(loginInfo),
                     CommonConst.LOGININFO_EXPIRED);
             result = loginInfo;
-        }else {//如果已经登录过，直接返回
-            String token = String.valueOf(redisUtil.get(String.format(RedisConstants.LOGIN_TOKEN,userName)));
-            result = JSON.parseObject((String) redisUtil.get(String.format(RedisConstants.LOGIN_INFO,token)),
-                    LoginInfo.class);// (LoginInfo);
+        }else if (rtUser.getIsLogin().equals("1")){//如果已经登录过
+            if (key != null && redisUtil.hasKey(key)){
+                redisUtil.expire(key,CommonConst.LOGININFO_EXPIRED);
+                result = JSON.parseObject((String) redisUtil.get(key),LoginInfo.class);
+            }else {
+                loginInfo.setToken(UUID.randomUUID().toString());
+                userService.updateUser(rtUser);
+                redisUtil.set(String.format(RedisConstants.LOGIN_INFO,userName,loginInfo.getToken()),JSON.toJSONString(loginInfo),
+                        CommonConst.LOGININFO_EXPIRED);
+                result = loginInfo;
+            }
         }
         return JSON.toJSONString(result);
     }
@@ -95,12 +113,16 @@ public class LoginController {
      */
     @PostMapping(value = "logout")
     public String logout(HttpServletRequest request){
-        String token = request.getParameter("token");
-        LoginInfo loginInfo = JSON.parseObject((String) redisUtil.get(String.format(RedisConstants.LOGIN_INFO,token)),
-                LoginInfo.class) ;
-        String userName = loginInfo.getUserName();
-        redisUtil.del(String.format(RedisConstants.LOGIN_TOKEN,userName));
-        redisUtil.del(String.format(RedisConstants.LOGIN_INFO,token));
+        String token = request.getHeader("token");
+        String userName = request.getHeader("userName");
+//        LoginInfo loginInfo = JSON.parseObject((String) redisUtil.get(String.format(RedisConstants.LOGIN_INFO,userName,token)),
+//                LoginInfo.class) ;
+        UserPo userPo = new UserPo();
+        userPo.setUserName(userName);
+        userPo.setIsLogin("0");
+        userService.updateUser(userPo);
+//        redisUtil.del(String.format(RedisConstants.LOGIN_TOKEN,userName));
+        redisUtil.del(String.format(RedisConstants.LOGIN_INFO,userName,token));
         return "注销成功";
     }
 }

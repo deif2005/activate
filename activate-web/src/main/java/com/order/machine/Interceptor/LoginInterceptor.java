@@ -42,7 +42,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
-        if (null == redisUtil.get(String.format(RedisConstants.LOGIN_INFO, request.getHeader("token")))){
+        String userName = request.getHeader("userName");
+        if (null == redisUtil.get(String.format(RedisConstants.LOGIN_INFO,userName,token))){
             throw LogicException.le(CommonEnum.ReturnCode.UserLoginCode.user_login_overdue_error.getValue(),
                     "登录信息已过期");
         }
@@ -50,8 +51,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_tokeninvalid.getValue(),
                     CommonEnum.ReturnMsg.SystemMsg.sys_err_tokeninvalid.getValue());
         }
-        redisUtil.expire(String.format(RedisConstants.LOGIN_INFO, request.getHeader("token")),
-                CommonConst.LOGININFO_EXPIRED);
+        redisUtil.expire(String.format(RedisConstants.LOGIN_INFO,userName,token),CommonConst.LOGININFO_EXPIRED);
         super.preHandle(request,response,handler);
         return true;
     }

@@ -40,7 +40,8 @@ public class RestResultWrapper implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
-        RestResult result = new RestResult(true, ReturnCode.SystemCode.SYS_SUCCESS.getValue(), body, null);
+        RestResult result = new RestResult(true, ReturnCode.SystemCode.SYS_SUCCESS.getValue(), body,
+                null);
         if (body instanceof String && StringUtils.startsWith(String.valueOf(body), "{")) {
             JSONObject jsonObject = JSONObject.parseObject(String.valueOf(body));
             result.setData(jsonObject);

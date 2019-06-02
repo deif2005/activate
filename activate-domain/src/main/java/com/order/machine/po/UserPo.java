@@ -19,6 +19,8 @@ public class UserPo {
     private String userName;
     private String password;
     private String salt;
+    private String isLogin;
+    private String createTime;
 
 //    public String getCompanyId() {
 //        return companyId;
@@ -58,5 +60,21 @@ public class UserPo {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public String getIsLogin() {
+        return isLogin;
+    }
+
+    public void setIsLogin(String isLogin) {
+        this.isLogin = isLogin;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }
