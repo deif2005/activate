@@ -46,6 +46,7 @@ public class RestResultWrapper implements ResponseBodyAdvice<Object> {
             JSONObject jsonObject = JSONObject.parseObject(String.valueOf(body));
             result.setData(jsonObject);
         }
-        return JSON.toJSONString(result);
+//        return JSON.toJSONString(result);
+        return result;
     }
 }

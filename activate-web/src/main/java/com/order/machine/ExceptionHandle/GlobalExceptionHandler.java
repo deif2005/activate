@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public String exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
+    public Object exceptionHandler(HttpServletRequest request, Exception e, HttpServletResponse response) {
 
         //系统级异常，错误码固定为-1，提示语固定为系统繁忙，请稍后再试
         RestResult result = new RestResult(false, CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
@@ -61,6 +61,7 @@ public class GlobalExceptionHandler {
         else
             //对系统级异常进行日志记录
             logger.error("系统异常:" + e.getMessage(), e);
-        return JSON.toJSONString(result);
+//        return JSON.toJSONString(result);
+        return result;
     }
 }
