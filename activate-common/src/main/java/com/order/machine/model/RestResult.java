@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
  * @Date 2019/2/14
  **/
 public class RestResult {
-    /**
-     * 请求是否成功
-     */
-    private boolean success;
+//    /**
+//     * 请求是否成功
+//     */
+//    private boolean success;
     /**
      * 成功或者失败的code错误码
      */
@@ -38,7 +38,7 @@ public class RestResult {
     @Override
     public String toString() {
         return "RestResult{" +
-                "success=" + success +
+//                "success=" + success +
                 ", code='" + code + '\'' +
                 ", data=" + data +
                 ", errorMessage=" + errorMessage +
@@ -47,20 +47,20 @@ public class RestResult {
     }
 
     public RestResult(boolean success, String code, Object data, Object errorMessage) {
-        this.success = success;
+//        this.success = success;
         this.code = code;
         this.data = data;
         this.errorMessage = errorMessage;
         this.currentTime = LocalDateTime.now();
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+//    public boolean isSuccess() {
+//        return success;
+//    }
+//
+//    public void setSuccess(boolean success) {
+//        this.success = success;
+//    }
 
     public String getCode() {
         return code;

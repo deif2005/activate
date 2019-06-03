@@ -7,6 +7,7 @@ import com.order.machine.StringUtils;
 import com.order.machine.common_const.CommonEnum;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.exception.LogicException;
+import com.order.machine.httputils.HttpApiService;
 import com.order.machine.po.ActivatePo;
 import com.order.machine.po.BoxExchangePo;
 import com.order.machine.po.OrderConfigPo;
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+
 /**
  * @author miou
  * @date 2019-04-17
@@ -39,6 +42,8 @@ public class OrderConfigController {
     IOrderDataService orderDataService;
     @Autowired
     private Environment environment;
+    @Resource
+    private HttpApiService httpAPIService;
 
     /**
      * 添加订单信息
@@ -155,12 +160,32 @@ public class OrderConfigController {
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "机顶盒的ID未提供");
         //截取出key2中的sn号和时间戳
-        String key2 = boxExchangePo.getKey2();
-        String chipSn = key2.substring(0,18);
-        String dateStr = key2.substring(18,31);
-        String result = orderConfigService.checkActivate(boxExchangePo.getKey1(),chipSn,dateStr);
+//        String chipSn = key2.substring(0,18);
+//        String dateStr = key2.substring(18,31);
+        String result = orderConfigService.checkActivate(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
+                boxExchangePo.getKey3());
         return result;
     }
+
+    public static void main(String[] args) {
+//        System.out.println(System.currentTimeMillis());
+        try {
+            String result = AESUtil.aesEncrypt("{\"key1\":\"001_11223344_20190603_0001\"," +
+                            "\"key2\":\"12345678AABBCCDD\",\"key3\":\"1559545501619\"}",
+                    "ea87587081ed11e9b0987c7a915348fe");
+            System.out.println(result);
+        } catch (Exception e){
+
+        }
+    }
+
+    @RequestMapping("httpclient")
+    public String test() throws Exception {
+        String str = httpAPIService.doGet("http://www.baidu.com");
+        System.out.println(str);
+        return "hello";
+    }
+
 
     /**
      * 获取机器激活信息列表
@@ -215,4 +240,5 @@ public class OrderConfigController {
         String result = JSON.toJSONString(orderStatisticsPageInfo);
         return result;
     }
+
 }

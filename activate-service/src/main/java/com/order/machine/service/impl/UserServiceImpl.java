@@ -71,10 +71,9 @@ public class UserServiceImpl implements IUserService {
         String salt = VertifyCodeUtil.getRandromNum();
         String md5Pwd = MD5Utils.getMD5(password + salt);
         UserPo user = new UserPo();
-//        user.setCompanyId(companyId);
         user.setUserName(userName);
         user.setPassword(md5Pwd);
         user.setSalt(salt);
-        userMapper.insert(user);
+        userMapper.insertSelective(user);
     }
 }

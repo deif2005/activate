@@ -7,7 +7,8 @@ package com.order.machine.po;
 public class BoxExchangePo {
 
     private String key1;//orderId
-    private String key2;//chipsn+timestamp串
+    private String key2;//chipsn
+    private String key3;//timestamp
 
     public String getKey1() {
         return key1;
@@ -23,5 +24,13 @@ public class BoxExchangePo {
 
     public void setKey2(String key2) {
         this.key2 = key2;
+    }
+
+    public String getKey3() {
+        return key3;
+    }
+
+    public void setKey3(String key3) {
+        this.key3 = key3;
     }
 }
