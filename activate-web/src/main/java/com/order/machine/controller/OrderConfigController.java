@@ -8,6 +8,7 @@ import com.order.machine.common_const.CommonEnum;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.exception.LogicException;
 import com.order.machine.httputils.HttpApiService;
+import com.order.machine.httputils.HttpResult;
 import com.order.machine.po.ActivatePo;
 import com.order.machine.po.BoxExchangePo;
 import com.order.machine.po.OrderConfigPo;
@@ -201,14 +202,14 @@ public class OrderConfigController {
         Map<String,String> headMap = new HashMap<>();
         headMap.put("token",request.getHeader("token"));
         headMap.put("userName",request.getHeader("userName"));
-        StringBuilder sb = new StringBuilder("{");
+        StringBuilder sb = new StringBuilder();
 //                .append("key1").append(":").append("001_11223344_20190603_0001").
 //                append("key2").append(":");
         ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
         try {
             for (int i=1;i<=execCount;i++){
                 String chipSn = StringUtils.completeFixCode(String.valueOf(i),3);
-                sb.append("\"key1\"").append(":").append("\"001_11223344_20190603_0001\",").append("\"key2\"").append(":");
+                sb.append("{").append("\"key1\"").append(":").append("\"001_12345678AABBCCDDEE_20190529_0001\",").append("\"key2\"").append(":");
                 sb.append("\"12345678AABB").append(chipSn+"\"").append(",\"key3\"").append(":").
                         append("\""+System.currentTimeMillis()+"\"").append("}");
                 Map<String,Object> hashMap = new HashMap<>();
@@ -217,7 +218,7 @@ public class OrderConfigController {
                 hashMap.put("activateParam",aesChipSn);
                 executorService.execute(()->{
                     try {
-                        httpAPIService.doPost(url,hashMap,headMap);
+                        System.out.println(JSON.toJSONString(httpAPIService.doPost(url,hashMap,headMap)));
 //                        System.out.println("thread: "+Thread.currentThread().getName()+" chipSn: "+chipSn+" activateParam: "+aesChipSn);
                     }catch (Exception e){
                         e.printStackTrace();

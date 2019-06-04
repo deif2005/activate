@@ -1,6 +1,7 @@
 package com.order.machine.httputils;
 
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -102,6 +103,14 @@ public class HttpApiService {
         }
         // 发起请求
         CloseableHttpResponse response = this.httpClient.execute(httpPost);
+//        HttpEntity entity = response.getEntity();
+//        System.out.println("----------------------------------------");
+//        System.out.println(response.getStatusLine());
+//        if (entity != null) {
+//            System.out.println("Response content length: " + entity.getContentLength());
+//            System.out.println(EntityUtils.toString(entity));
+//            EntityUtils.consume(entity);
+//        }
         return new HttpResult(response.getStatusLine().getStatusCode(), EntityUtils.toString(
                 response.getEntity(), "UTF-8"));
     }
