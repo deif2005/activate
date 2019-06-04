@@ -175,7 +175,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @return
      */
     private String verifyOrderId(String orderId){
-        String result = "";
+        String result;
         Example example = new Example(OrderConfigPo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("orderId",orderId);
@@ -183,14 +183,18 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         //判断激活总数小于可激活总数
 //        criteria.andCondition("activate_count < licence_count");
         OrderConfigPo rt = orderConfigMapper.selectOneByExample(example);
-        if ("2".equals(rt.getIsClose()))
-            LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
-                    "该批次已停止授权");
-        if (rt.getActivateCount() < rt.getLicenceCount())
-            LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
-                    "授权数量已超");
-        if (null != rt)
-            result = rt.getKey1();
+        if (null != rt){
+            if ("2".equals(rt.getIsClose()))
+                throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                        "该批次已停止授权");
+            if (rt.getActivateCount() < rt.getLicenceCount())
+                throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                        "授权数量已超");
+        }else {
+            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                    "订单不存在");
+        }
+        result = rt.getKey1();
         return result;
     }
 
