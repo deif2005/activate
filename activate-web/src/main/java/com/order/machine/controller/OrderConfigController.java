@@ -19,6 +19,7 @@ import com.order.machine.service.IOrderDataService;
 import com.wd.encrypt.AESUtil;
 import com.wd.util.DateUtil;
 import com.wd.util.UUIDGenerator;
+import jdk.nashorn.internal.parser.Token;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -27,6 +28,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author miou
@@ -186,6 +193,42 @@ public class OrderConfigController {
         return "hello";
     }
 
+    @RequestMapping("batchTestHttp")
+    public String batchTestHttp(@RequestParam("threadNum") int threadNum,
+                                @RequestParam("execCount") int execCount,
+                                HttpServletRequest request) {
+        final String url = "http://192.168.15.61:8080/order/v1/activateMachine";
+        Map<String,String> headMap = new HashMap<>();
+        headMap.put("token",request.getHeader("token"));
+        headMap.put("userName",request.getHeader("userName"));
+        StringBuilder sb = new StringBuilder("{");
+//                .append("key1").append(":").append("001_11223344_20190603_0001").
+//                append("key2").append(":");
+        ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
+        try {
+            for (int i=1;i<=execCount;i++){
+                String chipSn = StringUtils.completeFixCode(String.valueOf(i),3);
+                sb.append("key1").append(":").append("001_11223344_20190603_0001").append("key2").append(":");
+                sb.append("12345678AABB").append(chipSn).append("key3").append(":").
+                        append(System.currentTimeMillis()).append("}");
+                Map<String,Object> hashMap = new HashMap<>();
+                String aesChipSn = AESUtil.aesEncrypt(sb.toString(),"ea87587081ed11e9b0987c7a915348fe");
+                sb.setLength(0);
+                hashMap.put("activateParam",aesChipSn);
+                executorService.execute(()->{
+                    try {
+                        httpAPIService.doPost(url,hashMap,headMap);
+//                        System.out.println("thread: "+Thread.currentThread().getName()+" chipSn: "+chipSn+" activateParam: "+aesChipSn);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                });
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     /**
      * 获取机器激活信息列表
