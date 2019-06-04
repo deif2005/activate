@@ -187,7 +187,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
             if ("2".equals(rt.getIsClose()))
                 LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
                         "该批次已停止授权");
-            if (rt.getActivateCount() < rt.getLicenceCount())
+            if (rt.getActivateCount() >= rt.getLicenceCount())
                 LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
                         "授权数量已超");
         }else {
