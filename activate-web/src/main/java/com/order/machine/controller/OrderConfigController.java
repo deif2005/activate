@@ -208,9 +208,9 @@ public class OrderConfigController {
         try {
             for (int i=1;i<=execCount;i++){
                 String chipSn = StringUtils.completeFixCode(String.valueOf(i),3);
-                sb.append("key1").append(":").append("001_11223344_20190603_0001").append("key2").append(":");
-                sb.append("12345678AABB").append(chipSn).append("key3").append(":").
-                        append(System.currentTimeMillis()).append("}");
+                sb.append("\"key1\"").append(":").append("\"001_11223344_20190603_0001\",").append("\"key2\"").append(":");
+                sb.append("\"12345678AABB").append(chipSn+"\"").append(",\"key3\"").append(":").
+                        append("\""+System.currentTimeMillis()+"\"").append("}");
                 Map<String,Object> hashMap = new HashMap<>();
                 String aesChipSn = AESUtil.aesEncrypt(sb.toString(),"ea87587081ed11e9b0987c7a915348fe");
                 sb.setLength(0);

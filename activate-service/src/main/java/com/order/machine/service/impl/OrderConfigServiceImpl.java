@@ -185,13 +185,13 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         OrderConfigPo rt = orderConfigMapper.selectOneByExample(example);
         if (null != rt){
             if ("2".equals(rt.getIsClose()))
-                throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
                         "该批次已停止授权");
             if (rt.getActivateCount() < rt.getLicenceCount())
-                throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
                         "授权数量已超");
         }else {
-            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+            LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
                     "订单不存在");
         }
         result = rt.getKey1();

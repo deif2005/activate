@@ -45,6 +45,6 @@ public class LogicException extends RuntimeException {
      * @return
      */
     public static LogicException le(String code, String errorMsg) {
-        return new LogicException(code, errorMsg);
+        throw new LogicException(code, errorMsg);
     }
 }
