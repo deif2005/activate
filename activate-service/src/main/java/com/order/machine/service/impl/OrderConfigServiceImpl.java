@@ -161,12 +161,34 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
     @Transactional
     @Override
     public String checkActivate(String orderId,String chipSn,String dateStr){
-        String licenceKey = verifyOrderId(orderId);
-        if (!Strings.isNullOrEmpty(licenceKey)){
-            String activateKey = verifyChipSn(orderId,chipSn,dateStr,licenceKey);
-            return activateKey;
+        String aesKey;
+        String licenceKey;
+        ActivatePo activatePo = new ActivatePo();
+        activatePo.setChipSn(chipSn);
+        activatePo.setOrderId(orderId);
+        ActivatePo rt = activateMapper.selectOne(activatePo);
+        if (rt == null){ //未激活过
+            //取得订单秘钥
+            licenceKey = verifyOrderId(orderId,false);
+            activatePo.setId(UUID.randomUUID().toString());
+            activatePo.setActivateTimes(1);
+            //新增
+            activateMapper.insertSelective(activatePo);
+            orderConfigMapper.updateActivateCount(orderId);
+        }else{ //已激活 更新原有记录激活次数
+            licenceKey = verifyOrderId(orderId,true);
+            activatePo.setId(rt.getId());
+            activatePo.setActivateTimes(rt.getActivateTimes()+1);
+            activatePo.setUpdateTime(DateUtil.getDateTime());
+            activateMapper.updateByPrimaryKeySelective(activatePo);
         }
-        return "";
+        try {
+            //获取授权加密信息
+            aesKey = AESUtil.aesEncrypt(activatePo.getChipSn()+dateStr,licenceKey);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return aesKey;
     }
 
     /**
@@ -174,28 +196,27 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @param orderId
      * @return
      */
-    private String verifyOrderId(String orderId){
-        String result;
+    private String verifyOrderId(String orderId, boolean repeatActivate){
         Example example = new Example(OrderConfigPo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("orderId",orderId);
-//        criteria.andEqualTo("isClose","1");
         //判断激活总数小于可激活总数
-//        criteria.andCondition("activate_count < licence_count");
         OrderConfigPo rt = orderConfigMapper.selectOneByExample(example);
         if (null != rt){
             if ("2".equals(rt.getIsClose()))
                 LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
                         "该批次已停止授权");
-            if (rt.getActivateCount() >= rt.getLicenceCount())
-                LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
-                        "授权数量已超");
+            //如果是重复激活不判断激活数量
+            if (!repeatActivate){
+                if (rt.getActivateCount() >= rt.getLicenceCount())
+                    LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
+                            "授权数量已超");
+            }
         }else {
             LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
                     "订单不存在");
         }
-        result = rt.getKey1();
-        return result;
+        return rt.getKey1();
     }
 
     /**
