@@ -29,7 +29,6 @@ public class BaseDataController {
         CompanyPo companyPo = new CompanyPo();
         companyPo.setCompanyName(companyName);
         orderDataService.addCompanyInfo(companyPo);
-//        return "";
     }
 
     /**
@@ -45,7 +44,6 @@ public class BaseDataController {
         companyPo.setCompanyId(companyId);
         companyPo.setCompanyName(companyName);
         orderDataService.updateCompanyInfo(companyPo);
-//        return "";
     }
 
     /**
@@ -59,7 +57,6 @@ public class BaseDataController {
         companyPo.setCompanyId(companyId);
         companyPo.setStatus("2");
         orderDataService.updateCompanyInfo(companyPo);
-//        return "";
     }
 
     /**
@@ -78,6 +75,6 @@ public class BaseDataController {
             page.setPageSize(pageSize);
         }
         PageInfo<CompanyPo> companyPoPageInfo = orderDataService.listCompany(page);
-        return companyPoPageInfo;//JSON.toJSONString(companyPoPageInfo);
+        return companyPoPageInfo;
     }
 }

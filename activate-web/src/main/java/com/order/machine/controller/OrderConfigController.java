@@ -79,7 +79,6 @@ public class OrderConfigController {
         sb.append(s);
         //上传文档
         orderConfigService.addOrderConfigInfo(sb.toString(),companyId,licenceCount,dateStr,key1);
-//        return "";
     }
 
     /**
@@ -102,7 +101,6 @@ public class OrderConfigController {
         if (!Strings.isNullOrEmpty(isClose))
             orderConfigPo.setIsClose(isClose);
         orderConfigService.modifyOrderConfig(orderConfigPo);
-//        return "";
     }
 
     /**

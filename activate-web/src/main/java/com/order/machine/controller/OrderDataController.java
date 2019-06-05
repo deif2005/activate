@@ -57,7 +57,6 @@ public class OrderDataController {
         orderConfigQuery.setPageSize(pageSize);
         orderConfigQuery.setIsClose(isClose);
         PageInfo<OrderConfigPo> orderConfigPoPageInfo = orderDataService.listOrderConfig(orderConfigQuery);
-//        String result = JSON.toJSONString(orderConfigPoPageInfo);
         return orderConfigPoPageInfo;
     }
 
@@ -69,7 +68,6 @@ public class OrderDataController {
     @GetMapping("/v1/getOrderConfig")
     public OrderConfigPo getOrderConfigInfo(@RequestParam("orderId") String orderId){
         OrderConfigPo orderConfigPo = orderConfigService.getOrderConfig(orderId);
-//        String result = JSON.toJSONString(orderConfigPo);
         return orderConfigPo;
     }
 
@@ -98,7 +96,6 @@ public class OrderDataController {
         activateMachineQuery.setPageSize(pageSize);
         activateMachineQuery.setActivateTimes(activateTimes);
         PageInfo<ActivatePo> activatePoPageInfo = orderDataService.listActivateMachine(activateMachineQuery);
-//        String result = JSON.toJSONString(activatePoPageInfo);
         return activatePoPageInfo;
     }
 
@@ -141,7 +138,6 @@ public class OrderDataController {
                                                      @RequestParam(value = "activateTimes",required = false)
                                                         Integer activateTimes){
         List<OrderTimesCount> orderCountList = orderDataService.getOrderCount(orderId,activateTimes);
-//        String result = JSON.toJSONString(orderCountList);
         return orderCountList;
     }
 }
