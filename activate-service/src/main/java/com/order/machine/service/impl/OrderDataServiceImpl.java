@@ -1,11 +1,11 @@
 package com.order.machine.service.impl;
 
-import com.github.pagehelper.ISelect;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.order.machine.dto.OrderStatistics;
+import com.order.machine.dto.OrderTimesCount;
 import com.order.machine.mapper.ActivateMapper;
 import com.order.machine.mapper.CompanyMapper;
 import com.order.machine.mapper.OrderConfigMapper;
@@ -65,6 +65,7 @@ public class OrderDataServiceImpl implements IOrderDataService{
         Example example = new Example(ActivatePo.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("orderId",activateMachineQuery.getOrderId());
+        criteria.andEqualTo("activateTimes",activateMachineQuery.getActivateTimes());
         if (Strings.isNullOrEmpty(activateMachineQuery.getBeginDate()) &&
                 Strings.isNullOrEmpty(activateMachineQuery.getEndDate())){
             criteria.andBetween("createTime",activateMachineQuery.getBeginDate(),
@@ -123,5 +124,10 @@ public class OrderDataServiceImpl implements IOrderDataService{
         PageInfo<CompanyPo> companyPoPageInfo = PageHelper.startPage(page.getPageNum(),page.getPageSize()).
                 doSelectPageInfo(()->companyMapper.select(companyPo));
         return companyPoPageInfo;
+    }
+
+    @Override
+    public List<OrderTimesCount> getOrderCount(String orderId, Integer activateTimes){
+        return orderConfigMapper.getOrderCount(orderId,activateTimes);
     }
 }

@@ -30,6 +30,23 @@
         </where>
     </select>
 
+    <select id="getOrderCount" resultType="com.order.machine.dto.OrderTimesCount">
+        SELECT
+        order_id,
+        activate_times,
+        COUNT(activate_times) activate_times_count
+        FROM tb_activate
+        <where>
+            <if test="orderId != '' and orderId !=null">
+                order_id=#{orderId}
+            </if>
+            <if test="activateTimes != null">
+                AND activate_times=${activateTimes}
+            </if>
+        </where>
+        GROUP BY activate_times
+    </select>
+
     <insert id="addOrderConfigByList" parameterType="com.order.machine.po.OrderConfigPo">
         INSERT INTO tb_order_config(
           id,

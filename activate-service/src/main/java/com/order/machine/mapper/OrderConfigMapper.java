@@ -1,6 +1,7 @@
 package com.order.machine.mapper;
 
 import com.order.machine.dto.OrderStatistics;
+import com.order.machine.dto.OrderTimesCount;
 import com.order.machine.po.OrderConfigPo;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
@@ -21,4 +22,7 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
                                          @Param("orderDateEnd") String orderDateEnd);
 
     void addOrderConfigByList(List<OrderConfigPo> orderConfigPos);
+
+    List<OrderTimesCount> getOrderCount(@Param("orderId") String orderId,
+                                        @Param("activateTimes") Integer activateTimes);
 }

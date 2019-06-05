@@ -131,14 +131,15 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
 
     /**
      * 获取订单配置信息
-     * @param id
+     * @param orderId
      * @return
      */
     @Override
-    public OrderConfigPo getOrderConfig(String id){
+    public OrderConfigPo getOrderConfig(String orderId){
         OrderConfigPo orderConfigPo = new OrderConfigPo();
-        orderConfigPo.setId(id);
-        OrderConfigPo result = orderConfigMapper.selectByPrimaryKey(orderConfigPo);
+//        orderConfigPo.setId(id);
+        orderConfigPo.setOrderId(orderId);
+        OrderConfigPo result = orderConfigMapper.selectOne(orderConfigPo);
         return result;
     }
 

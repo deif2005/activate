@@ -3,12 +3,15 @@ package com.order.machine.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import com.order.machine.dto.OrderStatistics;
+import com.order.machine.dto.OrderTimesCount;
 import com.order.machine.po.ActivatePo;
 import com.order.machine.po.CompanyPo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
 import com.order.machine.query.OrderConfigQuery;
 import com.order.machine.query.OrderStatisticsQuery;
+
+import java.util.List;
 
 /**
  * @author miou
@@ -29,4 +32,6 @@ public interface IOrderDataService {
     void updateCompanyInfo(CompanyPo companyPo);
 
     PageInfo<CompanyPo> listCompany(Page page);
+
+    List<OrderTimesCount> getOrderCount(String orderId, Integer activateTimes);
 }

@@ -25,11 +25,11 @@ public class BaseDataController {
      * @return
      */
     @PostMapping("v1/addCustomer")
-    public String addCompanyInfo(@RequestParam("companyName") String companyName){
+    public void addCompanyInfo(@RequestParam("companyName") String companyName){
         CompanyPo companyPo = new CompanyPo();
         companyPo.setCompanyName(companyName);
         orderDataService.addCompanyInfo(companyPo);
-        return "";
+//        return "";
     }
 
     /**
@@ -39,13 +39,13 @@ public class BaseDataController {
      * @return
      */
     @PostMapping("v1/updateCustomer")
-    public String updateCompanyInfo(@RequestParam("companyId") String companyId,
+    public void updateCompanyInfo(@RequestParam("companyId") String companyId,
                                     @RequestParam("companyName") String companyName){
         CompanyPo companyPo = new CompanyPo();
         companyPo.setCompanyId(companyId);
         companyPo.setCompanyName(companyName);
         orderDataService.updateCompanyInfo(companyPo);
-        return "";
+//        return "";
     }
 
     /**
@@ -54,12 +54,12 @@ public class BaseDataController {
      * @return
      */
     @PostMapping("v1/deleteCustomer")
-    public String deleteCompanyInfo(@RequestParam("companyId") String companyId){
+    public void deleteCompanyInfo(@RequestParam("companyId") String companyId){
         CompanyPo companyPo = new CompanyPo();
         companyPo.setCompanyId(companyId);
         companyPo.setStatus("2");
         orderDataService.updateCompanyInfo(companyPo);
-        return "";
+//        return "";
     }
 
     /**
@@ -69,7 +69,8 @@ public class BaseDataController {
      * @return
      */
     @GetMapping("v1/listCompany")
-    public String listCompany(@RequestParam(value = "pageNo",required = false) Integer pageNo,
+//    @RequestMapping("v1/listCompany")
+    public PageInfo<CompanyPo> listCompany(@RequestParam(value = "pageNo",required = false) Integer pageNo,
                               @RequestParam(value = "pageSize",required = false) Integer pageSize){
         Page page = new Page();
         if (pageNo != null && pageSize != null){
@@ -77,6 +78,6 @@ public class BaseDataController {
             page.setPageSize(pageSize);
         }
         PageInfo<CompanyPo> companyPoPageInfo = orderDataService.listCompany(page);
-        return JSON.toJSONString(companyPoPageInfo);
+        return companyPoPageInfo;//JSON.toJSONString(companyPoPageInfo);
     }
 }

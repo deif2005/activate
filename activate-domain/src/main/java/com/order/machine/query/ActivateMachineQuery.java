@@ -12,6 +12,8 @@ public class ActivateMachineQuery extends Page {
     private String orderId;
     private String beginDate;
     private String endDate;
+    private Integer activateTimes;
+//    private Integer activateTimesCount;
 
     public String getOrderId() {
         return orderId;
@@ -35,5 +37,21 @@ public class ActivateMachineQuery extends Page {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+//    public Integer getActivateTimesCount() {
+//        return activateTimesCount;
+//    }
+//
+//    public void setActivateTimesCount(Integer activateTimesCount) {
+//        this.activateTimesCount = activateTimesCount;
+//    }
+
+    public Integer getActivateTimes() {
+        return activateTimes;
+    }
+
+    public void setActivateTimes(Integer activateTimes) {
+        this.activateTimes = activateTimes;
     }
 }
