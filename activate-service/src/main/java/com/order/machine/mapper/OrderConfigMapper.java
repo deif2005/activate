@@ -25,4 +25,11 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
 
     List<OrderTimesCount> getOrderCount(@Param("orderId") String orderId,
                                         @Param("activateTimes") Integer activateTimes);
+
+    List<OrderConfigPo> listOrderConfig(@Param("beginDate") String beginDate,
+                                        @Param("endDate") String endDate,
+                                        @Param("companyId") String companyId,
+                                        @Param("isClose") Integer isClose);
+
+    OrderConfigPo getOrderConfig(@Param("orderId") String orderId);
 }

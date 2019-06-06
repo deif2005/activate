@@ -1,5 +1,6 @@
 package com.order.machine.service.impl;
 
+import com.github.pagehelper.ISelect;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -18,6 +19,7 @@ import com.order.machine.query.OrderStatisticsQuery;
 import com.order.machine.service.IOrderDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -43,15 +45,23 @@ public class OrderDataServiceImpl implements IOrderDataService{
      */
     @Override
     public PageInfo<OrderConfigPo> listOrderConfig(OrderConfigQuery orderConfigQuery){
-        Example example = new Example(OrderConfigPo.class);
-        Example.Criteria criteria = example.createCriteria();
-        //如果是管理员,可以查看所有订单
-        criteria.andEqualTo("companyId",orderConfigQuery.getCompanyId());
-        criteria.andBetween("orderDate",orderConfigQuery.getBeginDate(),orderConfigQuery.getEndDate());
-        criteria.andEqualTo("isClose",orderConfigQuery.getIsClose());
+//        Example example = new Example(OrderConfigPo.class);
+//        Example.Criteria criteria = example.createCriteria();
+//        //如果是管理员,可以查看所有订单
+//        criteria.andEqualTo("companyId",orderConfigQuery.getCompanyId());
+//        criteria.andBetween("orderDate",orderConfigQuery.getBeginDate(),orderConfigQuery.getEndDate());
+//        criteria.andEqualTo("isClose",orderConfigQuery.getIsClose());
+        final Integer isClose = orderConfigQuery.getIsClose()==null?null:Integer.valueOf(orderConfigQuery.getIsClose());// Integer.valueOf();
+        ISelect iSelect = new ISelect() {
+            @Override
+            public void doSelect() {
+                orderConfigMapper.listOrderConfig(orderConfigQuery.getBeginDate(),orderConfigQuery.getEndDate(),
+                        orderConfigQuery.getCompanyId(), isClose);
+            }
+        };
         PageInfo<OrderConfigPo> orderConfigPoPageInfo = PageHelper.startPage(orderConfigQuery.getPageNo(),
                 orderConfigQuery.getPageSize())
-                .doSelectPageInfo(()-> orderConfigMapper.selectByExample(example));
+                .doSelectPageInfo(iSelect);
         return orderConfigPoPageInfo;
     }
 
@@ -95,6 +105,7 @@ public class OrderDataServiceImpl implements IOrderDataService{
      * @param companyId
      * @return
      */
+    @Transactional
     @Override
     public Integer getMaxOrderSn(String companyId){
         OrderConfigPo orderConfigPo = new OrderConfigPo();

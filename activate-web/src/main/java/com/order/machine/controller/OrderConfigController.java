@@ -64,10 +64,10 @@ public class OrderConfigController {
      */
     @PostMapping("/v1/addOrderConfig")
     public void addOrderConfig(@RequestParam("companyId") String companyId,
-                                 @RequestParam("chipSn") String chipSn,
-                                 @RequestParam("licenceCount") Integer licenceCount,
-                                 @RequestParam("dateStr") String dateStr,
-                                 @RequestParam(value = "key1",required = false) String key1){
+                               @RequestParam("chipSn") String chipSn,
+                               @RequestParam("licenceCount") Integer licenceCount,
+                               @RequestParam("dateStr") String dateStr,
+                               @RequestParam(value = "key1",required = false) String key1){
         StringBuilder sb = new StringBuilder();
         companyId = StringUtils.completeFixCode(companyId,3);
         sb.append(companyId).append("_").append(chipSn).append("_").append(dateStr).append("_");
@@ -83,17 +83,17 @@ public class OrderConfigController {
 
     /**
      * 更新订单配置
-     * @param id
+     * @param orderId
      * @param isClose
      * @return
      */
     @PostMapping("v1/updateOrderConfig")
-    public void updateOrderConfig(@RequestParam("id") String id,
-                                    @RequestParam(value="licenceCount", required = false) Integer licenceCount,
-                                    @RequestParam(value = "isClose",required = false) String isClose) throws
+    public void updateOrderConfig(@RequestParam("orderId") String orderId,
+                                  @RequestParam(value="licenceCount", required = false) Integer licenceCount,
+                                  @RequestParam(value="isClose",required = false) String isClose) throws
             MissingServletRequestParameterException{
         OrderConfigPo orderConfigPo = new OrderConfigPo();
-        orderConfigPo.setId(id);
+        orderConfigPo.setOrderId(orderId);//.setId(id);
         if (licenceCount == null && Strings.isNullOrEmpty(isClose))
             throw new MissingServletRequestParameterException("[licenceCount,isClose]","[Integer,String]");
         if (licenceCount != null)

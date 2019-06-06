@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +33,7 @@ import java.util.UUID;
  * @date 2019-04-13
  */
 @RestController
+@RequestMapping(value = "user")
 public class LoginController {
 
     private final static Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -49,7 +51,7 @@ public class LoginController {
      */
     @PostMapping(value = "userLogin")
 //    @NoRestReturn
-    public String login(@RequestParam("userName") String userName,
+    public LoginInfo login(@RequestParam("userName") String userName,
                         @RequestParam("password") String password){
         LoginInfo result=null;
         HashSet<String> keySet;
@@ -90,7 +92,7 @@ public class LoginController {
                 result = loginInfo;
             }
         }
-        return JSON.toJSONString(result);
+        return result;
     }
 
     /**
@@ -100,10 +102,9 @@ public class LoginController {
      * @return
      */
     @PostMapping(value = "register")
-    public String registerUser(@RequestParam("userName") String userName,
-                               @RequestParam("password") String password){
+    public void registerUser(@RequestParam("userName") String userName,
+                             @RequestParam("password") String password){
         userService.registerUser(userName,password);
-        return "";
     }
 
     /**
@@ -112,7 +113,7 @@ public class LoginController {
      * @return
      */
     @PostMapping(value = "logout")
-    public String logout(HttpServletRequest request){
+    public void logout(HttpServletRequest request){
         String token = request.getHeader("token");
         String userName = request.getHeader("userName");
 //        LoginInfo loginInfo = JSON.parseObject((String) redisUtil.get(String.format(RedisConstants.LOGIN_INFO,userName,token)),
@@ -123,6 +124,6 @@ public class LoginController {
         userService.updateUser(userPo);
 //        redisUtil.del(String.format(RedisConstants.LOGIN_TOKEN,userName));
         redisUtil.del(String.format(RedisConstants.LOGIN_INFO,userName,token));
-        return "注销成功";
+//        return "注销成功";
     }
 }

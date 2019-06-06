@@ -64,19 +64,16 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @param dateStr
      * @param key1
      */
+    @Transactional
     @Override
     public void addOrderConfigInfo(String orderId,String companyId,Integer licenceCount,String dateStr,String key1){
         OrderConfigPo orderConfigPo = new OrderConfigPo();
-        orderConfigPo.setId(UUID.randomUUID().toString());
+//        orderConfigPo.setId(UUID.randomUUID().toString());
         orderConfigPo.setCompanyId(companyId);
         orderConfigPo.setOrderId(orderId);
         orderConfigPo.setLicenceCount(licenceCount);
         orderConfigPo.setKey1(key1);
         orderConfigPo.setOrderDate(dateStr);
-//        orderConfigPo.setSalt(VertifyCodeUtil.getRandromNum());
-//        //导入时自动生成该订单批次的授权KEY(订单号+盐值)
-//        String md5Str = MD5Utils.getMD5(orderConfigPo.getOrderId()+orderConfigPo.getSalt());
-//        orderConfigPo.setLicenceKey(md5Str);
         orderConfigMapper.insertSelective(orderConfigPo);
     }
 
@@ -107,7 +104,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
                     OrderConfigPo orderConfigPo = new OrderConfigPo(row.getCell(0).toString(),
                             Integer.valueOf(row.getCell(1).toString()),
                             row.getCell(2).toString(),row.getCell(3).toString());
-                    orderConfigPo.setId(UUID.randomUUID().toString());
+//                    orderConfigPo.setId(UUID.randomUUID().toString());
                     orderConfigPo.setOrderDate(orderConfigPo.getOrderId());
                     getOrderCompanyAndDate(orderConfigPo);
                     orderConfigPos.add(orderConfigPo);
@@ -136,10 +133,9 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      */
     @Override
     public OrderConfigPo getOrderConfig(String orderId){
-        OrderConfigPo orderConfigPo = new OrderConfigPo();
-//        orderConfigPo.setId(id);
-        orderConfigPo.setOrderId(orderId);
-        OrderConfigPo result = orderConfigMapper.selectOne(orderConfigPo);
+//        OrderConfigPo orderConfigPo = new OrderConfigPo();
+//        orderConfigPo.setOrderId(orderId);
+        OrderConfigPo result = orderConfigMapper.getOrderConfig(orderId);
         return result;
     }
 

@@ -2,12 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.order.machine.mapper.OrderConfigMapper">
 
-    <update id="updateActivateCount" parameterType="string">
-      UPDATE tb_order_config
-      SET activate_count=activate_count+1
-      WHERE order_id=#{orderId}
-    </update>
-
     <select id="listOrderCount" resultType="com.order.machine.dto.OrderStatistics">
         SELECT
         a.company_id,
@@ -32,24 +26,73 @@
 
     <select id="getOrderCount" resultType="com.order.machine.dto.OrderTimesCount">
         SELECT
-        order_id,
-        activate_times,
-        COUNT(activate_times) activate_times_count
-        FROM tb_activate
+        b.company_id,
+        c.company_name,
+        a.order_id,
+        a.activate_times,
+        COUNT(a.activate_times) activate_times_count
+        FROM tb_activate a
+        INNER JOIN tb_order_config b ON a.order_id=b.order_id
+        INNER JOIN tb_company c ON b.`company_id`=c.company_id
         <where>
             <if test="orderId != '' and orderId !=null">
-                order_id=#{orderId}
+                a.order_id=#{orderId}
             </if>
             <if test="activateTimes != null">
-                AND activate_times=${activateTimes}
+                AND a.activate_times=${activateTimes}
             </if>
         </where>
-        GROUP BY activate_times
+        GROUP BY a.activate_times
     </select>
+
+    <select id="getOrderConfig" resultType="com.order.machine.po.OrderConfigPo">
+        SELECT
+            a.order_id,
+            a.company_id,
+            b.`company_name`,
+            a.licence_count,
+            a.key1,
+            a.activate_count,
+            a.is_close,
+            a.status,
+            a.order_date,
+            a.create_time
+        FROM tb_order_config a
+        INNER JOIN tb_company b ON a.`company_id`=b.`company_id`
+        WHERE a.order_id = #{orderId}
+    </select>
+
+    <select id="listOrderConfig" resultType="com.order.machine.po.OrderConfigPo">
+        SELECT
+        a.order_id,
+        a.company_id,
+        b.`company_name`,
+        a.licence_count,
+        a.key1,
+        a.activate_count,
+        a.is_close,
+        a.status,
+        a.order_date,
+        a.create_time
+        FROM tb_order_config a
+        INNER JOIN tb_company b ON a.`company_id`=b.`company_id`
+        WHERE (a.order_date BETWEEN #{beginDate} AND #{endDate})
+        <if test="companyId != '' and companyId != null ">
+            AND a.company_id=#{companyId}
+        </if>
+        <if test="isClose != '' and isClose != null">
+            AND a.is_close=${isClose}
+        </if>
+    </select>
+
+    <update id="updateActivateCount" parameterType="string">
+        UPDATE tb_order_config
+        SET activate_count=activate_count+1
+        WHERE order_id=#{orderId}
+    </update>
 
     <insert id="addOrderConfigByList" parameterType="com.order.machine.po.OrderConfigPo">
         INSERT INTO tb_order_config(
-          id,
           company_id,
           order_id,
           licence_count,
@@ -60,7 +103,6 @@
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
         (
-            #{item.id},
             #{item.companyId},
             #{item.orderId},
             #{item.licenceCount},

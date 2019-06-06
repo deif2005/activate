@@ -30,9 +30,9 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
     LoginInterceptor loginInterceptor;
 
     final String[] notLoginInterceptPaths = {
-            "/userLogin",
+            "/user/userLogin",
             "/index/**",
-            "/register/**",
+            "/user/register",
             "/order/v1/activateMachine"
 //            "/order/**"
     };
@@ -43,23 +43,20 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
         return converter;
     }
 
-    /**
-     * http请求返回值的转换配置
-     * @param converters
-     */
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        super.configureMessageConverters(converters);
-//        converters.add(responseBodyConverter());
-
+    @Bean(name = "responseBodyJsonConverter")
+    public HttpMessageConverter<Object> responseBodyJsonConverter(){
         //1.需要定义一个convert转换消息的对象;
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
         //2.添加fastJson的配置信息，比如：是否要格式化返回的json数据;
         FastJsonConfig fastJsonConfig = new FastJsonConfig();
         fastJsonConfig.setSerializerFeatures(SerializerFeature.PrettyFormat,
+                //是否输出值为null的字段,默认为false
                 SerializerFeature.WriteMapNullValue,
+                //字符类型字段如果为null,输出为"",而非null
                 SerializerFeature.WriteNullStringAsEmpty,
+                //消除对同一对象循环引用的问题，默认为false（如果不配置有可能会进入死循环）
                 SerializerFeature.DisableCircularReferenceDetect,
+                //List字段如果为null,输出为[],而非null
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.WriteDateUseDateFormat);
         //3处理中文乱码问题
@@ -68,8 +65,18 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
         //4.在convert中添加配置信息.
         fastJsonHttpMessageConverter.setSupportedMediaTypes(fastMediaTypes);
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
-        //5.将convert添加到converters当中.
-        converters.add(fastJsonHttpMessageConverter);
+        return fastJsonHttpMessageConverter;
+    }
+
+    /**
+     * http请求返回值的转换配置
+     * @param converters
+     */
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        super.configureMessageConverters(converters);
+        converters.add(responseBodyJsonConverter());
+        converters.add(responseBodyConverter());
     }
 
     @Override

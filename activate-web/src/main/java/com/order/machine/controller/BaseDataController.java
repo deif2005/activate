@@ -65,10 +65,10 @@ public class BaseDataController {
      * @param pageSize
      * @return
      */
-    @GetMapping("v1/listCompany")
+    @GetMapping("v1/listCustomer")
 //    @RequestMapping("v1/listCompany")
-    public PageInfo<CompanyPo> listCompany(@RequestParam(value = "pageNo",required = false) Integer pageNo,
-                              @RequestParam(value = "pageSize",required = false) Integer pageSize){
+    public PageInfo<CompanyPo> listCustomer(@RequestParam(value = "pageNo",required = false) Integer pageNo,
+                                            @RequestParam(value = "pageSize",required = false) Integer pageSize){
         Page page = new Page();
         if (pageNo != null && pageSize != null){
             page.setPageNum(pageNo);
