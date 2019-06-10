@@ -76,6 +76,7 @@ public class OrderDataServiceImpl implements IOrderDataService{
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("orderId",activateMachineQuery.getOrderId());
         criteria.andEqualTo("activateTimes",activateMachineQuery.getActivateTimes());
+        example.setOrderByClause("create_time DESC");
         if (Strings.isNullOrEmpty(activateMachineQuery.getBeginDate()) &&
                 Strings.isNullOrEmpty(activateMachineQuery.getEndDate())){
             criteria.andBetween("createTime",activateMachineQuery.getBeginDate(),

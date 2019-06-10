@@ -83,6 +83,7 @@
         <if test="isClose != '' and isClose != null">
             AND a.is_close=${isClose}
         </if>
+        ORDER BY create_time DESC
     </select>
 
     <update id="updateActivateCount" parameterType="string">
