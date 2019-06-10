@@ -39,7 +39,7 @@ public class BaseDataController {
      */
     @PostMapping("v1/updateCustomer")
     public void updateCompanyInfo(@RequestParam("companyId") String companyId,
-                                    @RequestParam("companyName") String companyName){
+                                  @RequestParam("companyName") String companyName){
         CompanyPo companyPo = new CompanyPo();
         companyPo.setCompanyId(companyId);
         companyPo.setCompanyName(companyName);

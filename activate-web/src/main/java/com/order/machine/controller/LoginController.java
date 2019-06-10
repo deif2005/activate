@@ -49,10 +49,10 @@ public class LoginController {
      * @param password
      * @return
      */
-    @PostMapping(value = "userLogin")
+    @PostMapping(value = "v1/userLogin")
 //    @NoRestReturn
     public LoginInfo login(@RequestParam("userName") String userName,
-                        @RequestParam("password") String password){
+                           @RequestParam("password") String password){
         LoginInfo result=null;
         HashSet<String> keySet;
         String key=null;
@@ -68,7 +68,7 @@ public class LoginController {
         while (iterator.hasNext()) {
             key = String.valueOf(iterator.next());
         }
-//        redisUtil.hasKey(key);
+        //如果用户未登录
         if (rtUser.getIsLogin().equals("0")){
             loginInfo.setToken(UUID.randomUUID().toString());
             rtUser.setIsLogin("1");
@@ -82,15 +82,15 @@ public class LoginController {
             result = loginInfo;
         }else if (rtUser.getIsLogin().equals("1")){//如果已经登录过
             if (key != null && redisUtil.hasKey(key)){
-                redisUtil.expire(key,CommonConst.LOGININFO_EXPIRED);
-                result = JSON.parseObject((String) redisUtil.get(key),LoginInfo.class);
-            }else {
-                loginInfo.setToken(UUID.randomUUID().toString());
-                userService.updateUser(rtUser);
-                redisUtil.set(String.format(RedisConstants.LOGIN_INFO,userName,loginInfo.getToken()),JSON.toJSONString(loginInfo),
-                        CommonConst.LOGININFO_EXPIRED);
-                result = loginInfo;
+                redisUtil.del(key);
+//                redisUtil.expire(key,CommonConst.LOGININFO_EXPIRED);
+//                result = JSON.parseObject((String) redisUtil.get(key),LoginInfo.class);
             }
+            loginInfo.setToken(UUID.randomUUID().toString());
+            userService.updateUser(rtUser);
+            redisUtil.set(String.format(RedisConstants.LOGIN_INFO,userName,loginInfo.getToken()),JSON.toJSONString(loginInfo),
+                    CommonConst.LOGININFO_EXPIRED);
+            result = loginInfo;
         }
         return result;
     }
@@ -101,7 +101,7 @@ public class LoginController {
      * @param password
      * @return
      */
-    @PostMapping(value = "register")
+    @PostMapping(value = "v1/register")
     public void registerUser(@RequestParam("userName") String userName,
                              @RequestParam("password") String password){
         userService.registerUser(userName,password);
@@ -112,7 +112,7 @@ public class LoginController {
      * @param request
      * @return
      */
-    @PostMapping(value = "logout")
+    @PostMapping(value = "v1/logout")
     public void logout(HttpServletRequest request){
         String token = request.getHeader("token");
         String userName = request.getHeader("userName");

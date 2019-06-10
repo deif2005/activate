@@ -13,5 +13,5 @@ public class CommonConst {
 
     public static final String LOGIN_KEY="LOGIN_KEY";
 
-    public static final Integer LOGININFO_EXPIRED=600;
+    public static final Integer LOGININFO_EXPIRED=6000;
 }
