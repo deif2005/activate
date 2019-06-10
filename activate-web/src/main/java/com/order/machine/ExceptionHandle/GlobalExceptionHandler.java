@@ -14,6 +14,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +58,9 @@ public class GlobalExceptionHandler {
         } else if (e instanceof HttpRequestMethodNotSupportedException){
             result.setCode(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue());
             result.setErrorMessage("请求方法类型错误");
+        } else if (e instanceof MethodArgumentTypeMismatchException){
+            result.setCode(CommonEnum.ReturnCode.SystemCode.sys_err_argumenttype.getValue());
+            result.setErrorMessage("参数类型错误");
         }
         else
             //对系统级异常进行日志记录

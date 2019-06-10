@@ -156,7 +156,7 @@ public enum CommonEnum {
             sys_err_noauth("0001"),//0001,您没有该项操作的权利;
             sys_err_tokeninvalid("0002"), //0002,token信息已失效
             sys_err_paramerror("0003"), //0003,参数错误
-            sys_err_rpcserviceerror("0004"),  //rpc服务器异常
+            sys_err_argumenttype("0004"),  //参数类型错误
             sys_err_uploadAudio("0005"),  //音频上传失败
             sys_err_uploadFile("0006"),   //文件上传失败
             sys_err_noaudiofile("0007"),  //未发现音频文件
