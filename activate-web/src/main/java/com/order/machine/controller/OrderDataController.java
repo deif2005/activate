@@ -2,6 +2,9 @@ package com.order.machine.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.order.machine.base.Page;
+import com.order.machine.dto.ActivateCount;
+import com.order.machine.dto.ActivateCountTotal;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.dto.OrderTimesCount;
 import com.order.machine.po.ActivatePo;
@@ -136,9 +139,54 @@ public class OrderDataController {
      */
     @GetMapping("v1/getOrderTimesCount")
     public List<OrderTimesCount> listActivateMachine(@RequestParam("orderId") String orderId,
+                                                     @RequestParam("companyId") String companyId,
                                                      @RequestParam(value = "activateTimes",required = false)
                                                         Integer activateTimes){
-        List<OrderTimesCount> orderCountList = orderDataService.getOrderCount(orderId,activateTimes);
+        List<OrderTimesCount> orderCountList = orderDataService.getOrderCount(orderId,companyId,activateTimes);
         return orderCountList;
+    }
+
+    /**
+     * 获取激活次数统计列表
+     * @param orderId
+     * @param companyId
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("v1/listActivateCountTotal")
+    public PageInfo<ActivateCountTotal> listActivateCountTotal(@RequestParam("orderId") String orderId,
+                                                               @RequestParam("companyId") String companyId,
+                                                               @RequestParam("pageNo") Integer pageNo,
+                                                               @RequestParam("pageSize") Integer pageSize){
+        Page page = new Page();
+        page.setPageNo(pageNo);
+        page.setPageSize(pageSize);
+        PageInfo<ActivateCountTotal> activateCountTotalList = orderDataService.listActivateCountTotal(orderId,
+                companyId,page);
+        return activateCountTotalList;
+    }
+
+    /**
+     * 获取激活机器信息明细表
+     * @param orderId
+     * @param companyId
+     * @param activateTimes
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    @GetMapping("v1/listActivateCount")
+    public PageInfo<ActivateCount> listActivateCount(@RequestParam("orderId") String orderId,
+                                                     @RequestParam("companyId") String companyId,
+                                                     @RequestParam("activateTimes") Integer activateTimes,
+                                                     @RequestParam("pageNo") Integer pageNo,
+                                                     @RequestParam("pageSize") Integer pageSize){
+        Page page = new Page();
+        page.setPageNo(pageNo);
+        page.setPageSize(pageSize);
+        PageInfo<ActivateCount> activateCountPageInfo = orderDataService.listActivateByCount(orderId,companyId,activateTimes,
+                page);
+        return activateCountPageInfo;
     }
 }

@@ -5,6 +5,8 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.order.machine.dto.ActivateCount;
+import com.order.machine.dto.ActivateCountTotal;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.dto.OrderTimesCount;
 import com.order.machine.mapper.ActivateMapper;
@@ -102,6 +104,37 @@ public class OrderDataServiceImpl implements IOrderDataService{
     }
 
     /**
+     * 获取激活次数统计数据
+     * @param orderId
+     * @param companyId
+     * @param page
+     * @return
+     */
+    @Override
+    public PageInfo<ActivateCountTotal> listActivateCountTotal(String orderId, String companyId,
+                                                               com.order.machine.base.Page page){
+        PageInfo<ActivateCountTotal> activateCountTotalPageInfo = PageHelper.startPage(page.getPageNo(),page.getPageSize()).
+                doSelectPageInfo(()->orderConfigMapper.listActivateCountTotal(orderId,companyId));
+        return activateCountTotalPageInfo;
+    }
+
+    /**
+     * 根据激活次数获取激活明细数据
+     * @param orderId
+     * @param companyId
+     * @param activateTimes
+     * @param page
+     * @return
+     */
+    @Override
+    public PageInfo<ActivateCount> listActivateByCount(String orderId,String companyId,Integer activateTimes,
+                                                       com.order.machine.base.Page page){
+        PageInfo<ActivateCount> activateCountPageInfo = PageHelper.startPage(page.getPageNo(),page.getPageSize()).
+                doSelectPageInfo(()->orderConfigMapper.listActivateByCount(activateTimes,companyId,orderId));
+        return activateCountPageInfo;
+    }
+
+    /**
      * 获取最大订单号
      * @param companyId
      * @return
@@ -139,7 +172,8 @@ public class OrderDataServiceImpl implements IOrderDataService{
     }
 
     @Override
-    public List<OrderTimesCount> getOrderCount(String orderId, Integer activateTimes){
-        return orderConfigMapper.getOrderCount(orderId,activateTimes);
+    public List<OrderTimesCount> getOrderCount(String orderId,String companyId,Integer activateTimes){
+        return orderConfigMapper.getOrderCount(orderId,companyId,activateTimes);
     }
+
 }

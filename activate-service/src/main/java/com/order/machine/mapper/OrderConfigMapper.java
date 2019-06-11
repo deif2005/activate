@@ -1,5 +1,8 @@
 package com.order.machine.mapper;
 
+import com.github.pagehelper.PageInfo;
+import com.order.machine.dto.ActivateCount;
+import com.order.machine.dto.ActivateCountTotal;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.dto.OrderTimesCount;
 import com.order.machine.po.OrderConfigPo;
@@ -24,6 +27,7 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
     void addOrderConfigByList(List<OrderConfigPo> orderConfigPos);
 
     List<OrderTimesCount> getOrderCount(@Param("orderId") String orderId,
+                                        @Param("companyId") String companyId,
                                         @Param("activateTimes") Integer activateTimes);
 
     List<OrderConfigPo> listOrderConfig(@Param("beginDate") String beginDate,
@@ -32,4 +36,11 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
                                         @Param("isClose") Integer isClose);
 
     OrderConfigPo getOrderConfig(@Param("orderId") String orderId);
+
+    List<ActivateCount> listActivateByCount(@Param("activateTimes") Integer activateTimes,
+                                            @Param("companyId") String companyId,
+                                            @Param("orderId") String orderId);
+
+    List<ActivateCountTotal> listActivateCountTotal(@Param("orderId") String orderId,
+                                                    @Param("companyId") String companyId);
 }

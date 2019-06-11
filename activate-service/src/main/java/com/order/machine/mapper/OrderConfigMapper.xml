@@ -38,6 +38,9 @@
             <if test="orderId != '' and orderId !=null">
                 a.order_id=#{orderId}
             </if>
+            <if test="companyId !='' and companyId != null">
+                AND b.companyId=#{companyId}
+            </if>
             <if test="activateTimes != null">
                 AND a.activate_times=${activateTimes}
             </if>
@@ -84,6 +87,48 @@
             AND a.is_close=${isClose}
         </if>
         ORDER BY create_time DESC
+    </select>
+
+    <select id="listActivateByCount" resultType="com.order.machine.dto.ActivateCount">
+        SELECT
+          order_id,
+          chip_sn,
+          activate_times,
+          update_time FROM tb_activate
+        <where>
+            <choose>
+                <when test="activateTimes == 1 or activateTimes == 2">
+                    activate_times=${activateTimes}
+                </when>
+                <otherwise>
+                    activate_times>=${activateTimes}
+                </otherwise>
+            </choose>
+            <if test="companyId != '' and companyId != null">
+                AND SUBSTR(order_id,1,3)=#{companyId}
+            </if>
+            <if test="orderId != '' and orderId != null">
+                AND order_id=#{orderId}
+            </if>
+        </where>
+    </select>
+
+    <select id="listActivateCountTotal" resultType="com.order.machine.dto.ActivateCountTotal">
+        SELECT a.order_id,b.licence_count,
+        COUNT(CASE WHEN activate_times=1 THEN activate_times END) 'one_times',
+        COUNT(CASE WHEN activate_times=2 THEN activate_times END) 'two_times',
+        COUNT(CASE WHEN activate_times>=3 THEN activate_times END) 'three_times'
+        FROM tb_activate a
+        INNER JOIN tb_order_config b ON a.order_id=b.order_id
+        <where>
+            <if test="orderId != null">
+                a.order_id=#{orderId}
+            </if>
+            <if test="companyId != null">
+                AND SUBSTR(a.order_id,1,3)=#{companyId}
+            </if>
+        </where>
+        GROUP BY a.order_id
     </select>
 
     <update id="updateActivateCount" parameterType="string">
