@@ -2,6 +2,7 @@ package com.order.machine.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
+import com.order.machine.StringUtils;
 import com.order.machine.base.Page;
 import com.order.machine.dto.ActivateCount;
 import com.order.machine.dto.ActivateCountTotal;
@@ -162,6 +163,7 @@ public class OrderDataController {
         Page page = new Page();
         page.setPageNo(pageNo);
         page.setPageSize(pageSize);
+        companyId = StringUtils.completeFixCode(companyId,3);
         PageInfo<ActivateCountTotal> activateCountTotalList = orderDataService.listActivateCountTotal(orderId,
                 companyId,page);
         return activateCountTotalList;
@@ -178,15 +180,18 @@ public class OrderDataController {
      */
     @GetMapping("v1/listActivateCount")
     public PageInfo<ActivateCount> listActivateCount(@RequestParam("orderId") String orderId,
+                                                     @RequestParam(value = "chipSn",required = false) String chipSn,
                                                      @RequestParam("companyId") String companyId,
-                                                     @RequestParam("activateTimes") Integer activateTimes,
+                                                     @RequestParam(value = "activateTimes", required = false)
+                                                                 Integer activateTimes,
                                                      @RequestParam("pageNo") Integer pageNo,
                                                      @RequestParam("pageSize") Integer pageSize){
         Page page = new Page();
         page.setPageNo(pageNo);
         page.setPageSize(pageSize);
-        PageInfo<ActivateCount> activateCountPageInfo = orderDataService.listActivateByCount(orderId,companyId,activateTimes,
-                page);
+        companyId = StringUtils.completeFixCode(companyId,3);
+        PageInfo<ActivateCount> activateCountPageInfo = orderDataService.listActivateByCount(orderId,companyId,chipSn,
+                activateTimes, page);
         return activateCountPageInfo;
     }
 }

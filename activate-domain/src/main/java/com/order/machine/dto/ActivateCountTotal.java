@@ -6,8 +6,12 @@ package com.order.machine.dto;
  */
 public class ActivateCountTotal {
 
+    private String companyId;
+    private String companyName;
     private String orderId;
     private String licenceCount;
+    private String activateCount;
+    private String orderDate;
     private String oneTimes;
     private String twoTimes;
     private String threeTimes;
@@ -50,5 +54,37 @@ public class ActivateCountTotal {
 
     public void setThreeTimes(String threeTimes) {
         this.threeTimes = threeTimes;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getActivateCount() {
+        return activateCount;
+    }
+
+    public void setActivateCount(String activateCount) {
+        this.activateCount = activateCount;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
     }
 }

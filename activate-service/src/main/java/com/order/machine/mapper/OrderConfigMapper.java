@@ -39,7 +39,8 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
 
     List<ActivateCount> listActivateByCount(@Param("activateTimes") Integer activateTimes,
                                             @Param("companyId") String companyId,
-                                            @Param("orderId") String orderId);
+                                            @Param("orderId") String orderId,
+                                            @Param("chipSn") String chipSn);
 
     List<ActivateCountTotal> listActivateCountTotal(@Param("orderId") String orderId,
                                                     @Param("companyId") String companyId);

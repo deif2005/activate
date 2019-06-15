@@ -127,10 +127,10 @@ public class OrderDataServiceImpl implements IOrderDataService{
      * @return
      */
     @Override
-    public PageInfo<ActivateCount> listActivateByCount(String orderId,String companyId,Integer activateTimes,
-                                                       com.order.machine.base.Page page){
+    public PageInfo<ActivateCount> listActivateByCount(String orderId,String companyId, String chipSn,
+                                                       Integer activateTimes,com.order.machine.base.Page page){
         PageInfo<ActivateCount> activateCountPageInfo = PageHelper.startPage(page.getPageNo(),page.getPageSize()).
-                doSelectPageInfo(()->orderConfigMapper.listActivateByCount(activateTimes,companyId,orderId));
+                doSelectPageInfo(()->orderConfigMapper.listActivateByCount(activateTimes,companyId,orderId,chipSn));
         return activateCountPageInfo;
     }
 

@@ -129,59 +129,59 @@ public class OrderConfigController {
         return result;
     }
 
-    public static void main(String[] args) {
-//        System.out.println(System.currentTimeMillis());
-        try {
-            String result = AESUtil.aesEncrypt("{\"key1\":\"001_11223344_20190603_0001\"," +
-                            "\"key2\":\"12345678AABBCCDD\",\"key3\":\"1559545501619\"}",
-                    "ea87587081ed11e9b0987c7a915348fe");
-            System.out.println(result);
-        } catch (Exception e){
+//    public static void main(String[] args) {
+////        System.out.println(System.currentTimeMillis());
+//        try {
+//            String result = AESUtil.aesEncrypt("{\"key1\":\"001_11223344_20190603_0001\"," +
+//                            "\"key2\":\"12345678AABBCCDD\",\"key3\":\"1559545501619\"}",
+//                    "ea87587081ed11e9b0987c7a915348fe");
+//            System.out.println(result);
+//        } catch (Exception e){
+//
+//        }
+//    }
 
-        }
-    }
+//    @RequestMapping("httpclient")
+//    public String test() throws Exception {
+//        String str = httpAPIService.doGet("http://www.baidu.com");
+//        System.out.println(str);
+//        return "hello";
+//    }
 
-    @RequestMapping("httpclient")
-    public String test() throws Exception {
-        String str = httpAPIService.doGet("http://www.baidu.com");
-        System.out.println(str);
-        return "hello";
-    }
-
-    @RequestMapping("batchTestHttp")
-    public String batchTestHttp(@RequestParam("threadNum") int threadNum,
-                                @RequestParam("execCount") int execCount,
-                                HttpServletRequest request) {
-        final String url = "http://192.168.15.61:8080/order/v1/activateMachine";
-        Map<String,String> headMap = new HashMap<>();
-        headMap.put("token",request.getHeader("token"));
-        headMap.put("userName",request.getHeader("userName"));
-        StringBuilder sb = new StringBuilder();
-//                .append("key1").append(":").append("001_11223344_20190603_0001").
-//                append("key2").append(":");
-        ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
-        try {
-            for (int i=1;i<=execCount;i++){
-                String chipSn = StringUtils.completeFixCode(String.valueOf(i),3);
-                sb.append("{").append("\"key1\"").append(":").append("\"001_12345678AABBCCDDEE_20190529_0001\",").append("\"key2\"").append(":");
-                sb.append("\"12345678AABB").append(chipSn+"\"").append(",\"key3\"").append(":").
-                        append("\""+System.currentTimeMillis()+"\"").append("}");
-                Map<String,Object> hashMap = new HashMap<>();
-                String aesChipSn = AESUtil.aesEncrypt(sb.toString(),"ea87587081ed11e9b0987c7a915348fe");
-                sb.setLength(0);
-                hashMap.put("activateParam",aesChipSn);
-                executorService.execute(()->{
-                    try {
-                        System.out.println(JSON.toJSONString(httpAPIService.doPost(url,hashMap,headMap)));
-//                        System.out.println("thread: "+Thread.currentThread().getName()+" chipSn: "+chipSn+" activateParam: "+aesChipSn);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                });
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return "";
-    }
+//    @RequestMapping("batchTestHttp")
+//    public String batchTestHttp(@RequestParam("threadNum") int threadNum,
+//                                @RequestParam("execCount") int execCount,
+//                                HttpServletRequest request) {
+//        final String url = "http://192.168.15.61:8080/order/v1/activateMachine";
+//        Map<String,String> headMap = new HashMap<>();
+//        headMap.put("token",request.getHeader("token"));
+//        headMap.put("userName",request.getHeader("userName"));
+//        StringBuilder sb = new StringBuilder();
+////                .append("key1").append(":").append("001_11223344_20190603_0001").
+////                append("key2").append(":");
+//        ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
+//        try {
+//            for (int i=1;i<=execCount;i++){
+//                String chipSn = StringUtils.completeFixCode(String.valueOf(i),3);
+//                sb.append("{").append("\"key1\"").append(":").append("\"001_12345678AABBCCDDEE_20190529_0001\",").append("\"key2\"").append(":");
+//                sb.append("\"12345678AABB").append(chipSn+"\"").append(",\"key3\"").append(":").
+//                        append("\""+System.currentTimeMillis()+"\"").append("}");
+//                Map<String,Object> hashMap = new HashMap<>();
+//                String aesChipSn = AESUtil.aesEncrypt(sb.toString(),"ea87587081ed11e9b0987c7a915348fe");
+//                sb.setLength(0);
+//                hashMap.put("activateParam",aesChipSn);
+//                executorService.execute(()->{
+//                    try {
+//                        System.out.println(JSON.toJSONString(httpAPIService.doPost(url,hashMap,headMap)));
+////                        System.out.println("thread: "+Thread.currentThread().getName()+" chipSn: "+chipSn+" activateParam: "+aesChipSn);
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+//                });
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return "";
+//    }
 }

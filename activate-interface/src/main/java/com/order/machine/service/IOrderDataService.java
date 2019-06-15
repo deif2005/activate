@@ -40,6 +40,6 @@ public interface IOrderDataService {
     PageInfo<ActivateCountTotal> listActivateCountTotal(String orderId, String companyId,
                                                         com.order.machine.base.Page page);
 
-    PageInfo<ActivateCount> listActivateByCount(String orderId, String companyId, Integer activateTimes,
-                                                       com.order.machine.base.Page page);
+    PageInfo<ActivateCount> listActivateByCount(String orderId, String companyId, String chipSn,
+                                                Integer activateTimes,com.order.machine.base.Page page);
 }
