@@ -156,7 +156,7 @@ public class OrderDataController {
      * @return
      */
     @GetMapping("v1/listActivateCountTotal")
-    public PageInfo<ActivateCountTotal> listActivateCountTotal(@RequestParam("orderId") String orderId,
+    public PageInfo<ActivateCountTotal> listActivateCountTotal(@RequestParam(value = "orderId",required = false) String orderId,
                                                                @RequestParam("companyId") String companyId,
                                                                @RequestParam("pageNo") Integer pageNo,
                                                                @RequestParam("pageSize") Integer pageSize){
