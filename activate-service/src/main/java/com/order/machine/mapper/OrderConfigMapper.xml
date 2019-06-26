@@ -48,7 +48,7 @@
         GROUP BY a.activate_times
     </select>
 
-    <select id="getOrderConfig" resultType="com.order.machine.po.OrderConfigPo">
+    <select id="getOrderConfig" resultType="com.order.machine.dto.OrderConfigDto">
         SELECT
             a.order_id,
             a.company_id,
@@ -65,7 +65,7 @@
         WHERE a.order_id = #{orderId}
     </select>
 
-    <select id="listOrderConfig" resultType="com.order.machine.po.OrderConfigPo">
+    <select id="listOrderConfig" resultType="com.order.machine.dto.OrderConfigDto">
         SELECT
         a.order_id,
         a.company_id,

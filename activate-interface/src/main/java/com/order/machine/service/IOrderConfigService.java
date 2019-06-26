@@ -1,6 +1,7 @@
 package com.order.machine.service;
 
 import com.github.pagehelper.PageInfo;
+import com.order.machine.dto.OrderConfigDto;
 import com.order.machine.po.ActivatePo;
 import com.order.machine.po.BoxExchangePo;
 import com.order.machine.po.OrderConfigPo;
@@ -15,7 +16,7 @@ public interface IOrderConfigService {
 
     void addOrderConfigInfo(String orderId,String companyId,Integer licenceCount,String dateStr,String key1);
 
-    OrderConfigPo getOrderConfig(String id);
+    OrderConfigDto getOrderConfig(String id);
 
     void modifyOrderConfig(OrderConfigPo orderConfigPo);
 

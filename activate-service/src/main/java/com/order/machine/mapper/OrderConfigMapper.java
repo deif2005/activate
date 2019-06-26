@@ -1,10 +1,7 @@
 package com.order.machine.mapper;
 
 import com.github.pagehelper.PageInfo;
-import com.order.machine.dto.ActivateCount;
-import com.order.machine.dto.ActivateCountTotal;
-import com.order.machine.dto.OrderStatistics;
-import com.order.machine.dto.OrderTimesCount;
+import com.order.machine.dto.*;
 import com.order.machine.po.OrderConfigPo;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
@@ -30,12 +27,12 @@ public interface OrderConfigMapper extends Mapper<OrderConfigPo> {
                                         @Param("companyId") String companyId,
                                         @Param("activateTimes") Integer activateTimes);
 
-    List<OrderConfigPo> listOrderConfig(@Param("beginDate") String beginDate,
-                                        @Param("endDate") String endDate,
-                                        @Param("companyId") String companyId,
-                                        @Param("isClose") Integer isClose);
+    List<OrderConfigDto> listOrderConfig(@Param("beginDate") String beginDate,
+                                         @Param("endDate") String endDate,
+                                         @Param("companyId") String companyId,
+                                         @Param("isClose") Integer isClose);
 
-    OrderConfigPo getOrderConfig(@Param("orderId") String orderId);
+    OrderConfigDto getOrderConfig(@Param("orderId") String orderId);
 
     List<ActivateCount> listActivateByCount(@Param("activateTimes") Integer activateTimes,
                                             @Param("companyId") String companyId,

@@ -13,7 +13,6 @@ public class OrderConfigPo {
     @Id
     private String orderId;
     private String companyId;
-    private String companyName;
     private Integer licenceCount;
     private String key1;
     private Integer activateCount;
@@ -31,21 +30,12 @@ public class OrderConfigPo {
         this.key1=key1;
     }
 
-
     public String getCompanyId() {
         return companyId;
     }
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getOrderId() {

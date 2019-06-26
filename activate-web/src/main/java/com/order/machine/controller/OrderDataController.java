@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.order.machine.StringUtils;
 import com.order.machine.base.Page;
-import com.order.machine.dto.ActivateCount;
-import com.order.machine.dto.ActivateCountTotal;
-import com.order.machine.dto.OrderStatistics;
-import com.order.machine.dto.OrderTimesCount;
+import com.order.machine.dto.*;
 import com.order.machine.po.ActivatePo;
 import com.order.machine.po.OrderConfigPo;
 import com.order.machine.query.ActivateMachineQuery;
@@ -70,9 +67,9 @@ public class OrderDataController {
      * @return
      */
     @GetMapping("/v1/getOrderConfig")
-    public OrderConfigPo getOrderConfigInfo(@RequestParam("orderId") String orderId){
-        OrderConfigPo orderConfigPo = orderConfigService.getOrderConfig(orderId);
-        return orderConfigPo;
+    public OrderConfigDto getOrderConfigInfo(@RequestParam("orderId") String orderId){
+        OrderConfigDto orderConfigDto = orderConfigService.getOrderConfig(orderId);
+        return orderConfigDto;
     }
 
     /**

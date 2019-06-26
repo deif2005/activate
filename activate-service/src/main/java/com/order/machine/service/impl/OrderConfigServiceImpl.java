@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.order.machine.common_const.CommonEnum;
+import com.order.machine.dto.OrderConfigDto;
 import com.order.machine.exception.LogicException;
 import com.order.machine.mapper.ActivateMapper;
 import com.order.machine.mapper.OrderConfigMapper;
@@ -132,10 +133,10 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @return
      */
     @Override
-    public OrderConfigPo getOrderConfig(String orderId){
+    public OrderConfigDto getOrderConfig(String orderId){
 //        OrderConfigPo orderConfigPo = new OrderConfigPo();
 //        orderConfigPo.setOrderId(orderId);
-        OrderConfigPo result = orderConfigMapper.getOrderConfig(orderId);
+        OrderConfigDto result = orderConfigMapper.getOrderConfig(orderId);
         return result;
     }
 

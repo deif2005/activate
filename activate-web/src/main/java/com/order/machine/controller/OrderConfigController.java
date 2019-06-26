@@ -132,7 +132,7 @@ public class OrderConfigController {
 //    public static void main(String[] args) {
 ////        System.out.println(System.currentTimeMillis());
 //        try {
-//            String result = AESUtil.aesEncrypt("{\"key1\":\"001_11223344_20190603_0001\"," +
+//            String result = AESUtil.aesEncrypt("{\"key1\":\"001_22222222_20190605_0003\"," +
 //                            "\"key2\":\"12345678AABBCCDD\",\"key3\":\"1559545501619\"}",
 //                    "ea87587081ed11e9b0987c7a915348fe");
 //            System.out.println(result);
@@ -140,14 +140,32 @@ public class OrderConfigController {
 //
 //        }
 //    }
-
+//
 //    @RequestMapping("httpclient")
-//    public String test() throws Exception {
-//        String str = httpAPIService.doGet("http://www.baidu.com");
-//        System.out.println(str);
+//    public String test(HttpServletRequest request) throws Exception {
+////        for(int i=0;i<10;i++){
+////            String str = httpAPIService.doGet("http://www.baidu.com");
+////            HttpResult result = httpAPIService.doPost("http://192.168.15.61:8080/order/v1/activateMachine");
+////            System.out.println(result);
+////        }
+//
+//        final String url = "http://192.168.15.61:8080/order/v1/activateMachine";
+//        Map<String,String> headMap = new HashMap<>();
+//        headMap.put("token",request.getHeader("token"));
+//        headMap.put("userName",request.getHeader("userName"));
+//        StringBuilder sb = new StringBuilder();
+//        String chipSn = StringUtils.completeFixCode(String.valueOf(1),3);
+//        sb.append("{").append("\"key1\"").append(":").append("\"001_22222222_20190605_0003\",").append("\"key2\"").append(":");
+//        sb.append("\"12345678AABB").append(chipSn+"\"").append(",\"key3\"").append(":").
+//                append("\""+System.currentTimeMillis()+"\"").append("}");
+//        Map<String,Object> hashMap = new HashMap<>();
+//        String aesChipSn = AESUtil.aesEncrypt(sb.toString(),"ea87587081ed11e9b0987c7a915348fe");
+//        sb.setLength(0);
+//        hashMap.put("activateParam",aesChipSn);
+//        httpAPIService.doPost(url,hashMap,headMap);
 //        return "hello";
 //    }
-
+//
 //    @RequestMapping("batchTestHttp")
 //    public String batchTestHttp(@RequestParam("threadNum") int threadNum,
 //                                @RequestParam("execCount") int execCount,
@@ -163,7 +181,7 @@ public class OrderConfigController {
 //        try {
 //            for (int i=1;i<=execCount;i++){
 //                String chipSn = StringUtils.completeFixCode(String.valueOf(i),3);
-//                sb.append("{").append("\"key1\"").append(":").append("\"001_12345678AABBCCDDEE_20190529_0001\",").append("\"key2\"").append(":");
+//                sb.append("{").append("\"key1\"").append(":").append("\"001_22222222_20190605_0003\",").append("\"key2\"").append(":");
 //                sb.append("\"12345678AABB").append(chipSn+"\"").append(",\"key3\"").append(":").
 //                        append("\""+System.currentTimeMillis()+"\"").append("}");
 //                Map<String,Object> hashMap = new HashMap<>();
