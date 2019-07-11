@@ -33,7 +33,8 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
             "/user/v1/userLogin",
             "/index/**",
             "/user/v1/register",
-            "/order/v1/activateMachine"
+            "/order/v1/activateMachine",
+            "/order/v2/activateMachine"
 //            "/order/**"
     };
 

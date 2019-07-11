@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -158,7 +159,7 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      */
     @Transactional
     @Override
-    public String checkActivate(String orderId,String chipSn,String dateStr){
+    public String checkActivate(String orderId,String chipSn,String dateStr,String sIv){
         String aesKey;
         String licenceKey;
         ActivatePo activatePo = new ActivatePo();
@@ -177,12 +178,53 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
             licenceKey = verifyOrderId(orderId,true);
             activatePo.setId(rt.getId());
             activatePo.setActivateTimes(rt.getActivateTimes()+1);
-            activatePo.setUpdateTime(DateUtil.getDateTime());
+//            activatePo.setUpdateTime(DateUtil.getDateTime());
             activateMapper.updateByPrimaryKeySelective(activatePo);
         }
         try {
             //获取授权加密信息
-            aesKey = AESUtil.aesEncrypt(activatePo.getChipSn()+dateStr,licenceKey);
+            aesKey = AESUtil.cbcEncrypt(activatePo.getChipSn()+dateStr,licenceKey,sIv);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return aesKey;
+    }
+
+    /**
+     * 授权
+     * @param orderId
+     * @param chipSn
+     * @param dateStr
+     * @return
+     */
+    @Transactional
+    @Override
+    public String checkActivate1(String orderId,String chipSn,String dateStr){
+        String aesKey;
+        String licenceKey;
+        ActivatePo activatePo = new ActivatePo();
+        activatePo.setChipSn(chipSn);
+        activatePo.setOrderId(orderId);
+        ActivatePo rt = activateMapper.selectOne(activatePo);
+        if (rt == null){ //未激活过
+            //取得订单秘钥
+            licenceKey = verifyOrderId(orderId,false);
+            activatePo.setId(UUID.randomUUID().toString());
+            activatePo.setActivateTimes(1);
+            //新增
+            activateMapper.insertSelective(activatePo);
+            orderConfigMapper.updateActivateCount(orderId);
+        }else{ //已激活 更新原有记录激活次数
+            licenceKey = verifyOrderId(orderId,true);
+            activatePo.setId(rt.getId());
+            activatePo.setActivateTimes(rt.getActivateTimes()+1);
+//            activatePo.setUpdateTime(DateUtil.getDateTime());
+            activateMapper.updateByPrimaryKeySelective(activatePo);
+        }
+        try {
+            //获取授权加密信息
+//            aesKey = AESUtil.aesEncrypt(activatePo.getChipSn()+dateStr,licenceKey);
+            aesKey = activatePo.getChipSn()+dateStr;
         }catch (Exception e){
             throw new RuntimeException(e);
         }

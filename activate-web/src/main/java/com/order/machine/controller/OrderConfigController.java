@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -72,7 +73,7 @@ public class OrderConfigController {
         companyId = StringUtils.completeFixCode(companyId,3);
         sb.append(companyId).append("_").append(chipSn).append("_").append(dateStr).append("_");
         if (Strings.isNullOrEmpty(key1)){
-            key1 = UUIDGenerator.getUUID();
+            key1 = UUIDGenerator.getUUID().substring(0,15);
         }
         Integer sn = orderDataService.getMaxOrderSn(companyId);
         String s = StringUtils.completeFixCode(String.valueOf(sn),4);
@@ -111,8 +112,12 @@ public class OrderConfigController {
     @PostMapping("v1/activateMachine")
     public String activateMachine(@RequestParam("activateParam") String activateParam){
         String decryptStr;
+        String sKey = environment.getProperty("aes.key2");
+        String sIv = environment.getProperty("aes.iv");
         try {
-            decryptStr = AESUtil.aesDecrypt(activateParam,environment.getProperty("eas.key2"));
+//            byte[] bytes = Base64.getUrlDecoder().decode(activateParam);
+//            String p = new String(bytes);
+            decryptStr = AESUtil.cbcDecrypt(activateParam,sKey,sIv);
         }catch (Exception e){
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
                     "非法信息交换");
@@ -125,21 +130,54 @@ public class OrderConfigController {
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "机顶盒的ID未提供");
         String result = orderConfigService.checkActivate(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
+                boxExchangePo.getKey3(),sIv);
+        return result;
+    }
+
+    /**
+     * 激活机器
+     * @param activateParam
+     * @return
+     */
+    @PostMapping("v2/activateMachine")
+    public String activateMachine2(@RequestParam("activateParam") String activateParam){
+//        String decryptStr;
+//        try {
+//            decryptStr = AESUtil.aesDecrypt(activateParam,environment.getProperty("eas.key2"));
+//        }catch (Exception e){
+//            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
+//                    "非法信息交换");
+//        }
+        BoxExchangePo boxExchangePo = JSON.parseObject(activateParam,BoxExchangePo.class);
+        if (Strings.isNullOrEmpty(boxExchangePo.getKey1()))
+            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
+                    "订单号未提供");
+        if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
+            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
+                    "机顶盒的ID未提供");
+        String result = orderConfigService.checkActivate1(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
                 boxExchangePo.getKey3());
         return result;
     }
 
-//    public static void main(String[] args) {
-////        System.out.println(System.currentTimeMillis());
-//        try {
-//            String result = AESUtil.aesEncrypt("{\"key1\":\"001_22222222_20190605_0003\"," +
+    public static void main(String[] args) {
+//        System.out.println(System.currentTimeMillis());
+        try {
+//            String result = AESUtil.cbcEncrypt("{\"key1\":\"001_22222222_20190605_0003\"," +
 //                            "\"key2\":\"12345678AABBCCDD\",\"key3\":\"1559545501619\"}",
-//                    "ea87587081ed11e9b0987c7a915348fe");
-//            System.out.println(result);
-//        } catch (Exception e){
-//
-//        }
-//    }
+//                    "ea87587081ed11e9","FACABEF081201435");
+
+            String result = AESUtil.cbcEncrypt("{\"key1\":\"019_gx6606sX_20190629_0001\"," +
+                            "\"key2\":\"B226954752423567\",\"key3\":\"1552379480\"}",
+                    "ea87587081ed11e9","FACABEF081201435"); //smkldospdosldaaa
+            System.out.println(result);
+            String result1 = Base64.getUrlEncoder().encodeToString(result.getBytes());
+            System.out.println(result1);
+        } catch (Exception e){
+
+        }
+//        System.out.println("05d1b403e004473f835036697c97e84a".substring(0,16));
+    }
 //
 //    @RequestMapping("httpclient")
 //    public String test(HttpServletRequest request) throws Exception {

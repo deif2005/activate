@@ -20,6 +20,8 @@ public interface IOrderConfigService {
 
     void modifyOrderConfig(OrderConfigPo orderConfigPo);
 
-    String checkActivate(String orderId,String chipSn,String dateStr);
+    String checkActivate(String orderId,String chipSn,String dateStr,String sIv);
+
+    String checkActivate1(String orderId,String chipSn,String dateStr);
 
 }
