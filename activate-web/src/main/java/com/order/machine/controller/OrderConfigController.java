@@ -169,7 +169,7 @@ public class OrderConfigController {
 
             String result = AESUtil.cbcEncrypt("{\"key1\":\"019_gx6606sX_20190629_0001\"," +
                             "\"key2\":\"B226954752423567\",\"key3\":\"1552379480\"}",
-                    "ea87587081ed11e9","FACABEF081201435"); //smkldospdosldaaa
+                    "smkldospdosldaaa","FACABEF081201435"); //smkldospdosldaaa
             System.out.println(result);
             String result1 = Base64.getUrlEncoder().encodeToString(result.getBytes());
             System.out.println(result1);
