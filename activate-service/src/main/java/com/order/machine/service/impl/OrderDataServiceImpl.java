@@ -5,10 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
-import com.order.machine.dto.ActivateCount;
-import com.order.machine.dto.ActivateCountTotal;
-import com.order.machine.dto.OrderStatistics;
-import com.order.machine.dto.OrderTimesCount;
+import com.order.machine.dto.*;
 import com.order.machine.mapper.ActivateMapper;
 import com.order.machine.mapper.CompanyMapper;
 import com.order.machine.mapper.OrderConfigMapper;
@@ -174,6 +171,18 @@ public class OrderDataServiceImpl implements IOrderDataService{
     @Override
     public List<OrderTimesCount> getOrderCount(String orderId,String companyId,Integer activateTimes){
         return orderConfigMapper.getOrderCount(orderId,companyId,activateTimes);
+    }
+
+    /**
+     * 根据订单号获取订单信息
+     * @param orderId
+     * @return
+     */
+    @Override
+    public OrderConfigPo getOrderConfigByOrderId(String orderId){
+        OrderConfigPo orderConfigPo = new OrderConfigPo();
+        orderConfigPo.setOrderId(orderId);
+        return orderConfigMapper.selectOne(orderConfigPo);
     }
 
 }

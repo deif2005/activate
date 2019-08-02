@@ -24,7 +24,7 @@ public class OrderConfigPo {
     public OrderConfigPo(){
     }
 
-    public OrderConfigPo(String orderId, Integer licenceCount, String key1, String key2){
+    public OrderConfigPo(String orderId, Integer licenceCount, String key1){
         this.orderId=orderId;
         this.licenceCount=licenceCount;
         this.key1=key1;

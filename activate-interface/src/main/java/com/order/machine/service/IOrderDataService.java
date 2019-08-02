@@ -42,4 +42,6 @@ public interface IOrderDataService {
 
     PageInfo<ActivateCount> listActivateByCount(String orderId, String companyId, String chipSn,
                                                 Integer activateTimes,com.order.machine.base.Page page);
+
+    OrderConfigPo getOrderConfigByOrderId(String orderId);
 }

@@ -22,6 +22,6 @@ public interface IOrderConfigService {
 
     String checkActivate(String orderId,String chipSn,String dateStr,String sIv);
 
-    String checkActivate1(String orderId,String chipSn,String dateStr);
+//    String checkActivate1(String orderId,String chipSn,String dateStr);
 
 }

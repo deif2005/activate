@@ -79,46 +79,46 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         orderConfigMapper.insertSelective(orderConfigPo);
     }
 
-    private void importOrderExcelFile(String filePath){
-        File excel = new File(filePath);
-        if (!excel.exists()){
-            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
-                    "文件不存在");
-        }
-        Workbook wb;
-        try {
-            if (Pattern.matches(xlsFile,excel.getName())){
-                FileInputStream fis = new FileInputStream(excel);   //文件流对象
-                wb = new HSSFWorkbook(fis);
-            }else if (Pattern.matches(xlsxFile,excel.getName())){
-                wb = new XSSFWorkbook(excel);
-            }else {
-                System.out.println("文件类型错误!");
-                return;
-            }
-            Sheet sheet = wb.getSheetAt(0);
-            int firstRowIndex = sheet.getFirstRowNum()+1;
-            int lastRowIndex = sheet.getLastRowNum();
-            List<OrderConfigPo> orderConfigPos = new ArrayList<>();
-            for(int rIndex = firstRowIndex; rIndex <= lastRowIndex; rIndex++) {   //遍历行
-                Row row = sheet.getRow(rIndex);
-                if (row != null) {
-                    OrderConfigPo orderConfigPo = new OrderConfigPo(row.getCell(0).toString(),
-                            Integer.valueOf(row.getCell(1).toString()),
-                            row.getCell(2).toString(),row.getCell(3).toString());
-//                    orderConfigPo.setId(UUID.randomUUID().toString());
-                    orderConfigPo.setOrderDate(orderConfigPo.getOrderId());
-                    getOrderCompanyAndDate(orderConfigPo);
-                    orderConfigPos.add(orderConfigPo);
-                }
-            }
-            orderConfigMapper.addOrderConfigByList(orderConfigPos);
-        }catch (IOException e){
-            e.printStackTrace();
-        }catch (InvalidFormatException e){
-            e.printStackTrace();
-        }
-    }
+//    private void importOrderExcelFile(String filePath){
+//        File excel = new File(filePath);
+//        if (!excel.exists()){
+//            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
+//                    "文件不存在");
+//        }
+//        Workbook wb;
+//        try {
+//            if (Pattern.matches(xlsFile,excel.getName())){
+//                FileInputStream fis = new FileInputStream(excel);   //文件流对象
+//                wb = new HSSFWorkbook(fis);
+//            }else if (Pattern.matches(xlsxFile,excel.getName())){
+//                wb = new XSSFWorkbook(excel);
+//            }else {
+//                System.out.println("文件类型错误!");
+//                return;
+//            }
+//            Sheet sheet = wb.getSheetAt(0);
+//            int firstRowIndex = sheet.getFirstRowNum()+1;
+//            int lastRowIndex = sheet.getLastRowNum();
+//            List<OrderConfigPo> orderConfigPos = new ArrayList<>();
+//            for(int rIndex = firstRowIndex; rIndex <= lastRowIndex; rIndex++) {   //遍历行
+//                Row row = sheet.getRow(rIndex);
+//                if (row != null) {
+//                    OrderConfigPo orderConfigPo = new OrderConfigPo(row.getCell(0).toString(),
+//                            Integer.valueOf(row.getCell(1).toString()),
+//                            row.getCell(2).toString(),row.getCell(3).toString());
+////                    orderConfigPo.setId(UUID.randomUUID().toString());
+//                    orderConfigPo.setOrderDate(orderConfigPo.getOrderId());
+//                    getOrderCompanyAndDate(orderConfigPo);
+//                    orderConfigPos.add(orderConfigPo);
+//                }
+//            }
+//            orderConfigMapper.addOrderConfigByList(orderConfigPos);
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }catch (InvalidFormatException e){
+//            e.printStackTrace();
+//        }
+//    }
 
     private void getOrderCompanyAndDate(OrderConfigPo orderConfigPo){
         //"12345678_01_1905_0001".split("_");
@@ -197,39 +197,39 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
      * @param dateStr
      * @return
      */
-    @Transactional
-    @Override
-    public String checkActivate1(String orderId,String chipSn,String dateStr){
-        String aesKey;
-        String licenceKey;
-        ActivatePo activatePo = new ActivatePo();
-        activatePo.setChipSn(chipSn);
-        activatePo.setOrderId(orderId);
-        ActivatePo rt = activateMapper.selectOne(activatePo);
-        if (rt == null){ //未激活过
-            //取得订单秘钥
-            licenceKey = verifyOrderId(orderId,false);
-            activatePo.setId(UUID.randomUUID().toString());
-            activatePo.setActivateTimes(1);
-            //新增
-            activateMapper.insertSelective(activatePo);
-            orderConfigMapper.updateActivateCount(orderId);
-        }else{ //已激活 更新原有记录激活次数
-            licenceKey = verifyOrderId(orderId,true);
-            activatePo.setId(rt.getId());
-            activatePo.setActivateTimes(rt.getActivateTimes()+1);
-//            activatePo.setUpdateTime(DateUtil.getDateTime());
-            activateMapper.updateByPrimaryKeySelective(activatePo);
-        }
-        try {
-            //获取授权加密信息
-//            aesKey = AESUtil.aesEncrypt(activatePo.getChipSn()+dateStr,licenceKey);
-            aesKey = activatePo.getChipSn()+dateStr;
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
-        return aesKey;
-    }
+//    @Transactional
+//    @Override
+//    public String checkActivate1(String orderId,String chipSn,String dateStr){
+//        String aesKey;
+//        String licenceKey;
+//        ActivatePo activatePo = new ActivatePo();
+//        activatePo.setChipSn(chipSn);
+//        activatePo.setOrderId(orderId);
+//        ActivatePo rt = activateMapper.selectOne(activatePo);
+//        if (rt == null){ //未激活过
+//            //取得订单秘钥
+//            licenceKey = verifyOrderId(orderId,false);
+//            activatePo.setId(UUID.randomUUID().toString());
+//            activatePo.setActivateTimes(1);
+//            //新增
+//            activateMapper.insertSelective(activatePo);
+//            orderConfigMapper.updateActivateCount(orderId);
+//        }else{ //已激活 更新原有记录激活次数
+//            licenceKey = verifyOrderId(orderId,true);
+//            activatePo.setId(rt.getId());
+//            activatePo.setActivateTimes(rt.getActivateTimes()+1);
+////            activatePo.setUpdateTime(DateUtil.getDateTime());
+//            activateMapper.updateByPrimaryKeySelective(activatePo);
+//        }
+//        try {
+//            //获取授权加密信息
+////            aesKey = AESUtil.aesEncrypt(activatePo.getChipSn()+dateStr,licenceKey);
+//            aesKey = activatePo.getChipSn()+dateStr;
+//        }catch (Exception e){
+//            throw new RuntimeException(e);
+//        }
+//        return aesKey;
+//    }
 
     /**
      * 验证订单信息

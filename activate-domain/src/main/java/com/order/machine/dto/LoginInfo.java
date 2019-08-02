@@ -9,6 +9,7 @@ public class LoginInfo {
     private String userName;
     private String token;
     private String loginTime;
+    private String version;
 
     public String getUserId() {
         return userId;
@@ -40,5 +41,13 @@ public class LoginInfo {
 
     public void setLoginTime(String loginTime) {
         this.loginTime = loginTime;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

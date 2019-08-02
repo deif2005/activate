@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.order.machine.StringUtils;
 import com.order.machine.common_const.CommonEnum;
+import com.order.machine.dto.ActivateReturn;
 import com.order.machine.dto.OrderStatistics;
 import com.order.machine.exception.LogicException;
 import com.order.machine.httputils.HttpApiService;
@@ -73,6 +74,7 @@ public class OrderConfigController {
         companyId = StringUtils.completeFixCode(companyId,3);
         sb.append(companyId).append("_").append(chipSn).append("_").append(dateStr).append("_");
         if (Strings.isNullOrEmpty(key1)){
+            //key值只能是16位串
             key1 = UUIDGenerator.getUUID().substring(0,15);
         }
         Integer sn = orderDataService.getMaxOrderSn(companyId);
@@ -110,7 +112,7 @@ public class OrderConfigController {
      * @return
      */
     @PostMapping("v1/activateMachine")
-    public String activateMachine(@RequestParam("activateParam") String activateParam){
+    public ActivateReturn activateMachine(@RequestParam("activateParam") String activateParam){
         String decryptStr;
         String sKey = environment.getProperty("aes.key2");
         String sIv = environment.getProperty("aes.iv");
@@ -129,9 +131,14 @@ public class OrderConfigController {
         if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
                     "机顶盒的ID未提供");
-        String result = orderConfigService.checkActivate(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
+        ActivateReturn activateReturn = new ActivateReturn();
+        String key = orderConfigService.checkActivate(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
                 boxExchangePo.getKey3(),sIv);
-        return result;
+        OrderConfigPo orderConfigPo = orderDataService.getOrderConfigByOrderId(boxExchangePo.getKey1());
+        activateReturn.setKey(key);
+        activateReturn.setLicenseCount(orderConfigPo.getLicenceCount());
+        activateReturn.setActivateCount(orderConfigPo.getActivateCount());
+        return activateReturn;
     }
 
     /**
@@ -139,26 +146,26 @@ public class OrderConfigController {
      * @param activateParam
      * @return
      */
-    @PostMapping("v2/activateMachine")
-    public String activateMachine2(@RequestParam("activateParam") String activateParam){
-//        String decryptStr;
-//        try {
-//            decryptStr = AESUtil.aesDecrypt(activateParam,environment.getProperty("eas.key2"));
-//        }catch (Exception e){
-//            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
-//                    "非法信息交换");
-//        }
-        BoxExchangePo boxExchangePo = JSON.parseObject(activateParam,BoxExchangePo.class);
-        if (Strings.isNullOrEmpty(boxExchangePo.getKey1()))
-            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
-                    "订单号未提供");
-        if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
-            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
-                    "机顶盒的ID未提供");
-        String result = orderConfigService.checkActivate1(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
-                boxExchangePo.getKey3());
-        return result;
-    }
+//    @PostMapping("v2/activateMachine")
+//    public String activateMachine2(@RequestParam("activateParam") String activateParam){
+////        String decryptStr;
+////        try {
+////            decryptStr = AESUtil.aesDecrypt(activateParam,environment.getProperty("eas.key2"));
+////        }catch (Exception e){
+////            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
+////                    "非法信息交换");
+////        }
+//        BoxExchangePo boxExchangePo = JSON.parseObject(activateParam,BoxExchangePo.class);
+//        if (Strings.isNullOrEmpty(boxExchangePo.getKey1()))
+//            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
+//                    "订单号未提供");
+//        if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
+//            throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
+//                    "机顶盒的ID未提供");
+//        String result = orderConfigService.checkActivate1(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
+//                boxExchangePo.getKey3());
+//        return result;
+//    }
 
     public static void main(String[] args) {
 //        System.out.println(System.currentTimeMillis());
@@ -167,12 +174,12 @@ public class OrderConfigController {
 //                            "\"key2\":\"12345678AABBCCDD\",\"key3\":\"1559545501619\"}",
 //                    "ea87587081ed11e9","FACABEF081201435");
 
-            String result = AESUtil.cbcEncrypt("{\"key1\":\"019_gx6606sX_20190629_0001\"," +
-                            "\"key2\":\"B226954752423567\",\"key3\":\"1552379480\"}",
+            String result = AESUtil.cbcEncrypt("{\"key1\":\"001_22222222_20190605_0002\"," +
+                            "\"key2\":\"B226954752423567\",\"key3\":\"1559545501619\"}",
                     "smkldospdosldaaa","FACABEF081201435"); //smkldospdosldaaa
             System.out.println(result);
-            String result1 = Base64.getUrlEncoder().encodeToString(result.getBytes());
-            System.out.println(result1);
+//            String result1 = Base64.getUrlEncoder().encodeToString(result.getBytes());
+//            System.out.println(result1);
         } catch (Exception e){
 
         }
