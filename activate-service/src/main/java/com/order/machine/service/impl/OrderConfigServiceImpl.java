@@ -245,16 +245,16 @@ public class OrderConfigServiceImpl implements IOrderConfigService {
         if (null != rt){
             if ("2".equals(rt.getIsClose()))
                 LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
-                        "该批次已停止授权");
+                        "Order Authorization Stoped");
             //如果是重复激活不判断激活数量
             if (!repeatActivate){
                 if (rt.getActivateCount() >= rt.getLicenceCount())
                     LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
-                            "授权数量已超");
+                            "ActiveNum Out of range");
             }
         }else {
             LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_businessException.getValue(),
-                    "订单不存在");
+                    "Order Not Exist");
         }
         return rt.getKey1();
     }

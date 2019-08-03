@@ -122,15 +122,15 @@ public class OrderConfigController {
             decryptStr = AESUtil.cbcDecrypt(activateParam,sKey,sIv);
         }catch (Exception e){
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_exception.getValue(),
-                    "非法信息交换");
+                    "Invalid Data Exchange");
         }
         BoxExchangePo boxExchangePo = JSON.parseObject(decryptStr,BoxExchangePo.class);
         if (Strings.isNullOrEmpty(boxExchangePo.getKey1()))
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
-                    "订单号未提供");
+                    "OrderNo Not Supply");
         if (Strings.isNullOrEmpty(boxExchangePo.getKey2()))
             throw LogicException.le(CommonEnum.ReturnCode.SystemCode.sys_err_paramerror.getValue(),
-                    "机顶盒的ID未提供");
+                    "STB ID Not Supply");
         ActivateReturn activateReturn = new ActivateReturn();
         String key = orderConfigService.checkActivate(boxExchangePo.getKey1(),boxExchangePo.getKey2(),
                 boxExchangePo.getKey3(),sIv);
